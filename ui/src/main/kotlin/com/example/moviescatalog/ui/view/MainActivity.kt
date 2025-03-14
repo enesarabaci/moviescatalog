@@ -1,7 +1,6 @@
-package com.example.moviescatalog.ui
+package com.example.moviescatalog.ui.view
 
 import android.os.Bundle
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import com.example.ui.databinding.ActivityMainBinding
 
