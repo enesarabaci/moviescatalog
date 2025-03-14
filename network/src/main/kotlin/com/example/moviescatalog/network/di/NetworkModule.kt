@@ -1,0 +1,56 @@
+package com.example.moviescatalog.network.di
+
+import com.example.moviescatalog.network.network.HeaderInterceptor
+import com.example.moviescatalog.network.network.NetworkService
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
+import com.google.gson.internal.bind.DateTypeAdapter
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
+import okhttp3.OkHttpClient
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+import java.util.Date
+import javax.inject.Singleton
+
+@InstallIn(SingletonComponent::class)
+@Module
+object NetworkModule {
+
+    @Singleton
+    @Provides
+    fun provideOkHttpClient(
+        headerInterceptor: HeaderInterceptor
+    ): OkHttpClient {
+        return OkHttpClient.Builder()
+            .addNetworkInterceptor(headerInterceptor)
+            .build()
+    }
+
+    @Singleton
+    @Provides
+    fun provideGson(): Gson {
+        return GsonBuilder().apply {
+            registerTypeAdapter(
+                Date::class.java,
+                DateTypeAdapter()
+            )
+        }.setLenient().create()
+    }
+
+    @Singleton
+    @Provides
+    fun provideNetworkService(
+        okHttpClient: OkHttpClient,
+        gson: Gson
+    ): NetworkService {
+        return Retrofit.Builder()
+            .baseUrl("https://api.themoviedb.org/3/")
+            .client(okHttpClient)
+            .addConverterFactory(GsonConverterFactory.create(gson))
+            .build()
+            .create(NetworkService::class.java)
+    }
+}
