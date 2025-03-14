@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <application
+        android:name=".MCApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -11,7 +12,7 @@
         android:theme="@style/Theme.MoviesCatalog"
         tools:targetApi="31">
         <activity
-            android:name=".ui.view.MainActivity"
+            android:name=".presentation.view.MainActivity"
             android:exported="true"
             android:theme="@style/Theme.MoviesCatalog">
             <intent-filter>
