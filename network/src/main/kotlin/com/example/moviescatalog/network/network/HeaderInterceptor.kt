@@ -2,9 +2,7 @@ package com.example.moviescatalog.network.network
 
 import okhttp3.Interceptor
 import okhttp3.Response
-import javax.inject.Singleton
 
-@Singleton
 class HeaderInterceptor : Interceptor {
 
     override fun intercept(chain: Interceptor.Chain): Response {
