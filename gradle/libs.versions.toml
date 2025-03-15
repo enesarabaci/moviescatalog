@@ -20,6 +20,7 @@ retrofit = "2.11.0"
 okhttp = "4.12.0"
 chucker = "4.0.0"
 jetbrainsKotlinJvm = "2.1.10"
+glide = "4.16.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -40,6 +41,7 @@ retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit
 converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "retrofit" }
 okhttp = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp" }
 chucker = { module = "com.github.chuckerteam.chucker:library", version.ref = "chucker" }
+glide = { module = "com.github.bumptech.glide:glide", version.ref = "glide" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

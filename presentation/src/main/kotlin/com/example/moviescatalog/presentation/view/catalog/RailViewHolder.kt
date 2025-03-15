@@ -2,6 +2,7 @@ package com.example.moviescatalog.presentation.view.catalog
 
 import android.graphics.Rect
 import android.view.View
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.example.moviescatalog.model.CatalogState
 import com.example.moviescatalog.model.MovieListData
@@ -19,9 +20,13 @@ class RailViewHolder(
 
     fun bind(catalogState: CatalogState<MovieListData>) {
         binding.catalogTitleTextView.text = catalogState.catalog.getTitle(binding.root.context)
+        binding.railErrorTextView.isVisible = catalogState is CatalogState.Error
 
         when (catalogState) {
-            is CatalogState.Error -> {}
+            is CatalogState.Error -> {
+                binding.railErrorTextView.text = catalogState.message
+            }
+
             is CatalogState.Idle -> {}
             is CatalogState.Loading -> {}
             is CatalogState.Success -> {

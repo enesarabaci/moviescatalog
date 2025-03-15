@@ -40,7 +40,7 @@ data class MovieResponse(
             title = title,
             originalTitle = originalTitle,
             overview = overview,
-            posterPath = posterPath,
+            porterUrl = "https://image.tmdb.org/t/p/w500$posterPath",
             releaseDate = releaseDate,
             voteAverage = voteAverage
         )

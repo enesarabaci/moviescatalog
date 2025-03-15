@@ -58,4 +58,6 @@ dependencies {
     implementation(libs.hilt.android)
     ksp(libs.androidx.hilt.compiler)
     ksp(libs.hilt.android.compiler)
+
+    implementation(libs.glide)
 }
