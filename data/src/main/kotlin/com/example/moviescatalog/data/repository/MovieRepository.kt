@@ -1,9 +1,11 @@
 package com.example.moviescatalog.data.repository
 
-import com.example.moviescatalog.network.response.MovieListResponse
+import com.example.moviescatalog.model.CatalogResult
+import com.example.moviescatalog.model.MovieCatalog
+import com.example.moviescatalog.model.MovieListData
 import kotlinx.coroutines.flow.Flow
 
 interface MovieRepository {
 
-    fun getMovies(sortedBy: String): Flow<MovieListResponse>
+    fun getMovies(movieCatalog: MovieCatalog): Flow<CatalogResult<MovieListData>>
 }

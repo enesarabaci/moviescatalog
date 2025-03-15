@@ -1,18 +1,27 @@
 package com.example.moviescatalog.data.repository
 
+import com.example.moviescatalog.model.CatalogResult
+import com.example.moviescatalog.model.MovieCatalog
+import com.example.moviescatalog.model.MovieListData
 import com.example.moviescatalog.network.network.NetworkService
-import com.example.moviescatalog.network.response.MovieListResponse
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.onStart
 import javax.inject.Inject
 
 class MovieRepositoryImpl @Inject constructor(
     private val networkService: NetworkService
 ) : MovieRepository {
 
-    override fun getMovies(sortedBy: String): Flow<MovieListResponse> {
-        return flow {
-            emit(networkService.getMovies(sortedBy))
+    override fun getMovies(movieCatalog: MovieCatalog): Flow<CatalogResult<MovieListData>> {
+        return flow<CatalogResult<MovieListData>> {
+            val response = networkService.getMovies(movieCatalog.sortByQuery)
+            emit(movieCatalog.success(response.toMovieListData()))
+        }.onStart {
+            emit(movieCatalog.loading())
+        }.catch { throwable ->
+            emit(movieCatalog.error(throwable.message))
         }
     }
 }

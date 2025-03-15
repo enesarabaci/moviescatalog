@@ -36,7 +36,6 @@ android {
 
 dependencies {
     implementation(project(":data"))
-    implementation(project(":network"))
     implementation(project(":model"))
 
     implementation(libs.androidx.core.ktx)
