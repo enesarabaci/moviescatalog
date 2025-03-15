@@ -48,7 +48,7 @@ object NetworkModule {
                 Date::class.java,
                 DateTypeAdapter()
             )
-        }.setLenient().create()
+        }.create()
     }
 
     @Singleton

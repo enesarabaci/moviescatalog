@@ -11,7 +11,7 @@ import com.example.ui.databinding.FragmentCatalogBinding
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class CatalogFragment : Fragment() {
+internal class CatalogFragment : Fragment() {
 
     private lateinit var binding: FragmentCatalogBinding
 
@@ -30,6 +30,6 @@ class CatalogFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.test()
+        viewModel.getMovies()
     }
 }
