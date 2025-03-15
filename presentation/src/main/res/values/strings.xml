@@ -1,1 +1,6 @@
-<resources></resources>
+<resources>
+    <string name="title_catalog_popular">Popular</string>
+    <string name="title_catalog_top_rated">Top Rated</string>
+    <string name="title_catalog_revenue">Revenue</string>
+    <string name="title_catalog_release_date">Release Date</string>
+</resources>

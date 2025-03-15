@@ -1,4 +1,4 @@
-package com.example.moviescatalog.presentation.view
+package com.example.moviescatalog.presentation.view.catalog
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -20,6 +20,10 @@ internal class CatalogFragment : Fragment() {
 
     private val viewModel: CatalogViewModel by viewModels()
 
+    private val catalogAdapter by lazy {
+        CatalogAdapter()
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -33,11 +37,13 @@ internal class CatalogFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding.catalogRecyclerView.adapter = catalogAdapter
+
         viewModel.catalogStateFlow.collectWhenStarted(viewLifecycleOwner, ::updateCatalog)
         viewModel.getMovies()
     }
 
     private fun updateCatalog(catalog: List<CatalogState<MovieListData>>) {
-
+        catalogAdapter.updateList(catalog)
     }
 }

@@ -4,7 +4,7 @@ sealed class CatalogState<out T>(open val catalog: MovieCatalog) {
 
     data class Success<T>(
         override val catalog: MovieCatalog,
-        val data: T?
+        val data: T
     ) : CatalogState<T>(catalog)
 
     data class Error(
