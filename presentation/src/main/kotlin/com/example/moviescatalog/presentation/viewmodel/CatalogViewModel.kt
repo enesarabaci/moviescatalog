@@ -3,7 +3,7 @@ package com.example.moviescatalog.presentation.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.moviescatalog.domain.GetMoviesUseCase
-import com.example.moviescatalog.model.CatalogResult
+import com.example.moviescatalog.model.CatalogState
 import com.example.moviescatalog.model.MovieCatalog
 import com.example.moviescatalog.model.MovieListData
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -21,17 +21,19 @@ internal class CatalogViewModel @Inject constructor(
 
     private val movieCatalog = MovieCatalog.entries
 
-    private val _catalogStateFlow = MutableStateFlow<List<CatalogResult<MovieListData>>>(
+    private val _catalogStateFlow = MutableStateFlow<List<CatalogState<MovieListData>>>(
         movieCatalog.map { movieCatalog ->
             movieCatalog.idle()
         }
     )
 
-    val catalogStateFlow: StateFlow<List<CatalogResult<MovieListData>>>
+    val catalogStateFlow: StateFlow<List<CatalogState<MovieListData>>>
         get() = _catalogStateFlow
 
-    private val flows = movieCatalog.map { movieCatalog ->
-        getMoviesUseCase(movieCatalog)
+    private val flows by lazy {
+        movieCatalog.map { movieCatalog ->
+            getMoviesUseCase(movieCatalog)
+        }
     }
 
     fun getMovies() {

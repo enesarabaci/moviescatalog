@@ -8,8 +8,8 @@ enum class MovieCatalog(
     REVENUE("revenue.desc"),
     RELEASE_DATE("primary_release_date.desc");
 
-    fun idle() = CatalogResult.Idle(this)
-    fun loading() = CatalogResult.Loading(this)
-    fun error(message: String?) = CatalogResult.Error(this, message)
-    fun <T> success(data: T) = CatalogResult.Success(this, data)
+    fun idle() = CatalogState.Idle(this)
+    fun loading() = CatalogState.Loading(this)
+    fun error(message: String?) = CatalogState.Error(this, message)
+    fun <T> success(data: T) = CatalogState.Success(this, data)
 }

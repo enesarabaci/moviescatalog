@@ -6,6 +6,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import com.example.moviescatalog.model.CatalogState
+import com.example.moviescatalog.model.MovieListData
+import com.example.moviescatalog.presentation.extension.collectWhenStarted
 import com.example.moviescatalog.presentation.viewmodel.CatalogViewModel
 import com.example.ui.databinding.FragmentCatalogBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -30,6 +33,11 @@ internal class CatalogFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        viewModel.catalogStateFlow.collectWhenStarted(viewLifecycleOwner, ::updateCatalog)
         viewModel.getMovies()
+    }
+
+    private fun updateCatalog(catalog: List<CatalogState<MovieListData>>) {
+
     }
 }

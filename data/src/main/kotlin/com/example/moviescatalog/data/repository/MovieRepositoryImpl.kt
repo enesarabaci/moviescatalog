@@ -1,6 +1,6 @@
 package com.example.moviescatalog.data.repository
 
-import com.example.moviescatalog.model.CatalogResult
+import com.example.moviescatalog.model.CatalogState
 import com.example.moviescatalog.model.MovieCatalog
 import com.example.moviescatalog.model.MovieListData
 import com.example.moviescatalog.network.network.NetworkService
@@ -14,8 +14,9 @@ class MovieRepositoryImpl @Inject constructor(
     private val networkService: NetworkService
 ) : MovieRepository {
 
-    override fun getMovies(movieCatalog: MovieCatalog): Flow<CatalogResult<MovieListData>> {
-        return flow<CatalogResult<MovieListData>> {
+    override fun getMovies(movieCatalog: MovieCatalog): Flow<CatalogState<MovieListData>> {
+
+        return flow<CatalogState<MovieListData>> {
             val response = networkService.getMovies(movieCatalog.sortByQuery)
             emit(movieCatalog.success(response.toMovieListData()))
         }.onStart {

@@ -6,7 +6,12 @@ import retrofit2.http.Query
 
 interface NetworkService {
 
-    @GET("discover/movie?include_adult=false&include_video=false&language=en-US&page=1")
-    suspend fun getMovies(@Query("sort_by") sortBy: String): MovieListResponse
+    @GET("discover/movie")
+    suspend fun getMovies(
+        @Query("sort_by") sortBy: String,
+        @Query("include_adult") includeAdult: Boolean = false,
+        @Query("include_video") includeVideo: Boolean = false,
+        @Query("language") language: String = "en-US",
+        @Query("page") page: Int = 1
+    ): MovieListResponse
 }
-
