@@ -9,7 +9,7 @@ sealed class CatalogState<out T>(open val catalog: MovieCatalog) {
 
     data class Error(
         override val catalog: MovieCatalog,
-        val message: String? = null
+        val errorType: ErrorType
     ) : CatalogState<Nothing>(catalog)
 
     data class Loading(
@@ -19,4 +19,9 @@ sealed class CatalogState<out T>(open val catalog: MovieCatalog) {
     data class Idle(
         override val catalog: MovieCatalog
     ) : CatalogState<Nothing>(catalog)
+}
+
+enum class ErrorType {
+    NETWORK,
+    UNKNOWN
 }

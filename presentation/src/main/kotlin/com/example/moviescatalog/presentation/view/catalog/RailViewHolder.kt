@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.moviescatalog.model.CatalogState
 import com.example.moviescatalog.model.MovieListData
 import com.example.moviescatalog.presentation.extension.dpToPx
+import com.example.moviescatalog.presentation.extension.getMessage
 import com.example.moviescatalog.presentation.extension.getTitle
 import com.example.ui.databinding.ItemRailBinding
 
@@ -19,12 +20,14 @@ class RailViewHolder(
     }
 
     fun bind(catalogState: CatalogState<MovieListData>) {
-        binding.catalogTitleTextView.text = catalogState.catalog.getTitle(binding.root.context)
+        val context = binding.root.context
+
+        binding.catalogTitleTextView.text = catalogState.catalog.getTitle(context)
         binding.railErrorTextView.isVisible = catalogState is CatalogState.Error
 
         when (catalogState) {
             is CatalogState.Error -> {
-                binding.railErrorTextView.text = catalogState.message
+                binding.railErrorTextView.text = catalogState.errorType.getMessage(context)
             }
 
             is CatalogState.Idle -> {}

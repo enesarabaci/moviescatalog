@@ -3,9 +3,9 @@ package com.example.moviescatalog.data.repository
 import com.example.moviescatalog.model.CatalogState
 import com.example.moviescatalog.model.MovieCatalog
 import com.example.moviescatalog.model.MovieListData
+import com.example.moviescatalog.network.catchException
 import com.example.moviescatalog.network.network.NetworkService
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.onStart
 import javax.inject.Inject
@@ -21,8 +21,8 @@ class MovieRepositoryImpl @Inject constructor(
             emit(movieCatalog.success(response.toMovieListData()))
         }.onStart {
             emit(movieCatalog.loading())
-        }.catch { throwable ->
-            emit(movieCatalog.error(throwable.message))
+        }.catchException { errorType ->
+            emit(movieCatalog.error(errorType))
         }
     }
 }

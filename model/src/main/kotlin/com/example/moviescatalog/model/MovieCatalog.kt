@@ -10,6 +10,6 @@ enum class MovieCatalog(
 
     fun idle() = CatalogState.Idle(this)
     fun loading() = CatalogState.Loading(this)
-    fun error(message: String?) = CatalogState.Error(this, message)
+    fun error(errorType: ErrorType) = CatalogState.Error(this, errorType)
     fun <T> success(data: T) = CatalogState.Success(this, data)
 }
