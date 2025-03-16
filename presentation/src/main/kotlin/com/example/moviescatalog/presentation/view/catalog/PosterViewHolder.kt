@@ -11,7 +11,7 @@ class PosterViewHolder(
 ) : RecyclerView.ViewHolder(binding.root) {
 
     fun bind(movie: MovieData) {
-        movie.porterUrl?.let {
+        movie.posterUrl?.let {
             binding.posterImageView.loadImage(it)
         }
 

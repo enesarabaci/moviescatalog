@@ -6,4 +6,6 @@
 
     <string name="message_network_error">Data could not be retrieved.\nPlease check your internet connection.</string>
     <string name="message_unknown_error">An unexpected error occurred.\nPlease try again.</string>
+
+    <string name="label_watch">Watch</string>
 </resources>

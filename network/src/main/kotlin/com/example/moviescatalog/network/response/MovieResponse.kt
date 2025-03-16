@@ -40,7 +40,8 @@ data class MovieResponse(
             title = title,
             originalTitle = originalTitle,
             overview = overview,
-            porterUrl = "https://image.tmdb.org/t/p/w500$posterPath",
+            posterUrl = if (posterPath == null) null else "https://image.tmdb.org/t/p/w500$posterPath",
+            backdropUrl = if (backdropPath == null) null else "https://image.tmdb.org/t/p/w500$backdropPath",
             releaseDate = releaseDate,
             voteAverage = voteAverage
         )
