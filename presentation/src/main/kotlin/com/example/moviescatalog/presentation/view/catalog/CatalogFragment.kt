@@ -1,5 +1,6 @@
 package com.example.moviescatalog.presentation.view.catalog
 
+import android.graphics.Rect
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -7,9 +8,11 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.RecyclerView
 import com.example.moviescatalog.model.CatalogState
 import com.example.moviescatalog.model.MovieListData
 import com.example.moviescatalog.presentation.extension.collectWhenStarted
+import com.example.moviescatalog.presentation.extension.dpToPx
 import com.example.moviescatalog.presentation.extension.navigatePush
 import com.example.moviescatalog.presentation.viewmodel.CatalogViewModel
 import com.example.ui.R
@@ -40,6 +43,7 @@ internal class CatalogFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding.catalogRecyclerView.addItemDecoration(itemDecoration)
         binding.catalogRecyclerView.adapter = catalogAdapter
 
         viewModel.catalogStateFlow.collectWhenStarted(viewLifecycleOwner, ::updateCatalog)
@@ -53,5 +57,27 @@ internal class CatalogFragment : Fragment() {
         findNavController().navigatePush(
             R.id.action_catalogFragment_to_detailFragment,
         )
+    }
+
+    private val itemDecoration = object : RecyclerView.ItemDecoration() {
+        override fun getItemOffsets(
+            outRect: Rect,
+            view: View,
+            parent: RecyclerView,
+            state: RecyclerView.State
+        ) {
+            super.getItemOffsets(outRect, view, parent, state)
+
+            val context = view.context
+
+            val position = parent.getChildLayoutPosition(view)
+
+            val top = if (position == 0)
+                context.dpToPx(48)
+            else
+                context.dpToPx(0)
+
+            outRect.top = top
+        }
     }
 }
