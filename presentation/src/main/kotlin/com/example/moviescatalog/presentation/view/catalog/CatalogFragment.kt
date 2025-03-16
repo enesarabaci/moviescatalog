@@ -2,6 +2,7 @@ package com.example.moviescatalog.presentation.view.catalog
 
 import android.graphics.Rect
 import android.os.Bundle
+import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -27,7 +28,10 @@ internal class CatalogFragment : Fragment() {
     private val viewModel: CatalogViewModel by viewModels()
 
     private val catalogAdapter by lazy {
-        CatalogAdapter(::onMovieClickListener)
+        CatalogAdapter(
+            onMovieClickListener = ::onMovieClickListener,
+            onScrollStateChangedListener = ::onScrollStateChangedListener
+        )
     }
 
     override fun onCreateView(
@@ -43,8 +47,7 @@ internal class CatalogFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.catalogRecyclerView.addItemDecoration(itemDecoration)
-        binding.catalogRecyclerView.adapter = catalogAdapter
+        setupRecyclerView()
 
         viewModel.catalogStateFlow.collectWhenStarted(viewLifecycleOwner, ::updateCatalog)
     }
@@ -56,6 +59,22 @@ internal class CatalogFragment : Fragment() {
     private fun onMovieClickListener(id: Int) {
         findNavController().navigatePush(
             R.id.action_catalogFragment_to_detailFragment,
+        )
+    }
+
+    private fun setupRecyclerView() {
+        catalogAdapter.setInnerRecyclerViewSavedStates(
+            viewModel.getInnerRecyclerViewSavedStates()
+        )
+
+        binding.catalogRecyclerView.addItemDecoration(itemDecoration)
+        binding.catalogRecyclerView.adapter = catalogAdapter
+    }
+
+    private fun onScrollStateChangedListener(position: Int, savedState: Parcelable?) {
+        viewModel.updateInnerRecyclerViewSavedState(
+            position = position,
+            savedState = savedState
         )
     }
 

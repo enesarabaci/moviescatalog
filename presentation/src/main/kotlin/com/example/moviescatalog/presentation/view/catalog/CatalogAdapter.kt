@@ -1,6 +1,7 @@
 package com.example.moviescatalog.presentation.view.catalog
 
 import android.graphics.Rect
+import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,7 +14,8 @@ import com.example.moviescatalog.presentation.extension.dpToPx
 import com.example.ui.databinding.ItemRailBinding
 
 class CatalogAdapter(
-    private val onMovieClickListener: (id: Int) -> Unit
+    private val onMovieClickListener: (id: Int) -> Unit,
+    private val onScrollStateChangedListener: ((Int, Parcelable?) -> Unit)
 ) : RecyclerView.Adapter<RailViewHolder>() {
 
     private val diffUtil = object : DiffUtil.ItemCallback<CatalogState<MovieListData>>() {
@@ -39,6 +41,12 @@ class CatalogAdapter(
 
     fun updateList(newList: List<CatalogState<MovieListData>>) {
         recyclerListDiffer.submitList(newList)
+    }
+
+    private var innerRecyclerViewSavedStates: Map<Int, Parcelable?>? = null
+
+    fun setInnerRecyclerViewSavedStates(savedStates: Map<Int, Parcelable?>) {
+        innerRecyclerViewSavedStates = savedStates
     }
 
     private val itemDecoration = object : RecyclerView.ItemDecoration() {
@@ -76,7 +84,12 @@ class CatalogAdapter(
             false
         )
 
-        return RailViewHolder(itemRailBinding, itemDecoration, onMovieClickListener)
+        return RailViewHolder(
+            itemRailBinding,
+            itemDecoration,
+            onMovieClickListener,
+            onScrollStateChangedListener
+        )
     }
 
     override fun getItemCount(): Int {
@@ -85,6 +98,11 @@ class CatalogAdapter(
 
     override fun onBindViewHolder(holder: RailViewHolder, position: Int) {
         val catalogState = currentList[position]
-        holder.bind(catalogState)
+        val savedState = innerRecyclerViewSavedStates?.get(position)
+
+        holder.bind(
+            catalogState = catalogState,
+            savedState = savedState
+        )
     }
 }

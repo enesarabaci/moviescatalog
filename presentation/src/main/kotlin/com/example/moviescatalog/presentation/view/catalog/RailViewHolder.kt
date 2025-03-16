@@ -1,5 +1,7 @@
 package com.example.moviescatalog.presentation.view.catalog
 
+import android.os.Parcelable
+import android.util.Log
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ItemDecoration
@@ -12,15 +14,23 @@ import com.example.ui.databinding.ItemRailBinding
 class RailViewHolder(
     private val binding: ItemRailBinding,
     itemDecoration: ItemDecoration,
-    private val onMovieClickListener: (id: Int) -> Unit
+    private val onMovieClickListener: (id: Int) -> Unit,
+    private val onScrollStateChangedListener: ((Int, Parcelable?) -> Unit)
 ) : RecyclerView.ViewHolder(binding.root) {
 
     private val railAdapter by lazy {
         RailAdapter(onMovieClickListener)
     }
 
-    fun bind(catalogState: CatalogState<MovieListData>) {
+    fun bind(
+        catalogState: CatalogState<MovieListData>,
+        savedState: Parcelable?
+    ) {
         val context = binding.root.context
+
+        savedState?.let { state ->
+            binding.railRecyclerView.layoutManager?.onRestoreInstanceState(state)
+        }
 
         binding.catalogTitleTextView.text = catalogState.catalog.getTitle(context)
         binding.railErrorTextView.isVisible = catalogState is CatalogState.Error
@@ -41,5 +51,16 @@ class RailViewHolder(
     init {
         binding.railRecyclerView.adapter = railAdapter
         binding.railRecyclerView.addItemDecoration(itemDecoration)
+
+        binding.railRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+
+                onScrollStateChangedListener(
+                    adapterPosition,
+                    recyclerView.layoutManager?.onSaveInstanceState()
+                )
+            }
+        })
     }
 }

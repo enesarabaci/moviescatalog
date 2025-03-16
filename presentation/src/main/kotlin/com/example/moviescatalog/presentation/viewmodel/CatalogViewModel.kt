@@ -1,5 +1,7 @@
 package com.example.moviescatalog.presentation.viewmodel
 
+import android.os.Parcelable
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.moviescatalog.domain.GetMoviesUseCase
@@ -16,6 +18,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 internal class CatalogViewModel @Inject constructor(
+    private val savedStateHandle: SavedStateHandle,
     private val getMoviesUseCase: GetMoviesUseCase
 ) : ViewModel() {
 
@@ -44,5 +47,23 @@ internal class CatalogViewModel @Inject constructor(
                 _catalogStateFlow.value = resultList
             }
         }
+    }
+
+    private val innerRecyclerViewSavedStates = mutableMapOf<Int, Parcelable?>()
+
+    fun updateInnerRecyclerViewSavedState(
+        position: Int,
+        savedState: Parcelable?
+    ) {
+        innerRecyclerViewSavedStates[position] = savedState
+        savedStateHandle[KEY_INNER_RECYCLER_VIEW_SAVED_STATES] = innerRecyclerViewSavedStates
+    }
+
+    fun getInnerRecyclerViewSavedStates(): Map<Int, Parcelable?> {
+        return savedStateHandle[KEY_INNER_RECYCLER_VIEW_SAVED_STATES] ?: mapOf()
+    }
+
+    companion object {
+        const val KEY_INNER_RECYCLER_VIEW_SAVED_STATES = "KEY_INNER_RECYCLER_VIEW_SAVED_STATES"
     }
 }
