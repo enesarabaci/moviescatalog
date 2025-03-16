@@ -9,7 +9,9 @@ import com.example.moviescatalog.model.CatalogState
 import com.example.moviescatalog.model.MovieListData
 import com.example.ui.databinding.ItemRailBinding
 
-class CatalogAdapter : RecyclerView.Adapter<RailViewHolder>() {
+class CatalogAdapter(
+    private val onMovieClickListener: (id: Int) -> Unit
+) : RecyclerView.Adapter<RailViewHolder>() {
 
     private val diffUtil = object : DiffUtil.ItemCallback<CatalogState<MovieListData>>() {
         override fun areItemsTheSame(
@@ -43,7 +45,7 @@ class CatalogAdapter : RecyclerView.Adapter<RailViewHolder>() {
             false
         )
 
-        return RailViewHolder(itemRailBinding)
+        return RailViewHolder(itemRailBinding, onMovieClickListener)
     }
 
     override fun getItemCount(): Int {

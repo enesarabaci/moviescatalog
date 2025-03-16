@@ -12,11 +12,12 @@ import com.example.moviescatalog.presentation.extension.getTitle
 import com.example.ui.databinding.ItemRailBinding
 
 class RailViewHolder(
-    private val binding: ItemRailBinding
+    private val binding: ItemRailBinding,
+    private val onMovieClickListener: (id: Int) -> Unit
 ) : RecyclerView.ViewHolder(binding.root) {
 
     private val railAdapter by lazy {
-        RailAdapter()
+        RailAdapter(onMovieClickListener)
     }
 
     fun bind(catalogState: CatalogState<MovieListData>) {

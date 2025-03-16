@@ -8,7 +8,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.moviescatalog.model.MovieData
 import com.example.ui.databinding.ItemPosterBinding
 
-class RailAdapter : RecyclerView.Adapter<PosterViewHolder>() {
+class RailAdapter(
+    private val onMovieClickListener: (id: Int) -> Unit
+) : RecyclerView.Adapter<PosterViewHolder>() {
 
     private val diffUtil = object : DiffUtil.ItemCallback<MovieData>() {
         override fun areItemsTheSame(
@@ -42,7 +44,7 @@ class RailAdapter : RecyclerView.Adapter<PosterViewHolder>() {
             false
         )
 
-        return PosterViewHolder(itemPosterBinding)
+        return PosterViewHolder(itemPosterBinding, onMovieClickListener)
     }
 
     override fun getItemCount(): Int {

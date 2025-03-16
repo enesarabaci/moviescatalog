@@ -6,10 +6,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import com.example.moviescatalog.model.CatalogState
 import com.example.moviescatalog.model.MovieListData
 import com.example.moviescatalog.presentation.extension.collectWhenStarted
+import com.example.moviescatalog.presentation.extension.navigatePush
 import com.example.moviescatalog.presentation.viewmodel.CatalogViewModel
+import com.example.ui.R
 import com.example.ui.databinding.FragmentCatalogBinding
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -21,7 +24,7 @@ internal class CatalogFragment : Fragment() {
     private val viewModel: CatalogViewModel by viewModels()
 
     private val catalogAdapter by lazy {
-        CatalogAdapter()
+        CatalogAdapter(::onMovieClickListener)
     }
 
     override fun onCreateView(
@@ -40,10 +43,15 @@ internal class CatalogFragment : Fragment() {
         binding.catalogRecyclerView.adapter = catalogAdapter
 
         viewModel.catalogStateFlow.collectWhenStarted(viewLifecycleOwner, ::updateCatalog)
-        viewModel.getMovies()
     }
 
     private fun updateCatalog(catalog: List<CatalogState<MovieListData>>) {
         catalogAdapter.updateList(catalog)
+    }
+
+    private fun onMovieClickListener(id: Int) {
+        findNavController().navigatePush(
+            R.id.action_catalogFragment_to_detailFragment,
+        )
     }
 }

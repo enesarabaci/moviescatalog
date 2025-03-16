@@ -36,7 +36,7 @@ internal class CatalogViewModel @Inject constructor(
         }
     }
 
-    fun getMovies() {
+    init {
         viewModelScope.launch {
             combine(*flows.toTypedArray()) { resultArray ->
                 resultArray.toList()
