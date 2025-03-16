@@ -1,15 +1,11 @@
 package com.example.moviescatalog.presentation.extension
 
-import android.os.Bundle
-import androidx.annotation.IdRes
 import androidx.navigation.NavController
+import androidx.navigation.NavDirections
 import androidx.navigation.navOptions
 import com.example.ui.R
 
-fun NavController.navigatePush(
-    @IdRes resId: Int,
-    args: Bundle? = null
-) {
+fun NavController.navigatePush(directions: NavDirections) {
     val navOptions = navOptions {
         anim {
             enter = R.anim.screen_push_enter_horizontal
@@ -19,5 +15,5 @@ fun NavController.navigatePush(
         }
     }
 
-    navigate(resId, args, navOptions)
+    navigate(directions, navOptions)
 }

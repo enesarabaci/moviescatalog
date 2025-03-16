@@ -16,7 +16,6 @@ import com.example.moviescatalog.presentation.extension.collectWhenStarted
 import com.example.moviescatalog.presentation.extension.dpToPx
 import com.example.moviescatalog.presentation.extension.navigatePush
 import com.example.moviescatalog.presentation.viewmodel.CatalogViewModel
-import com.example.ui.R
 import com.example.ui.databinding.FragmentCatalogBinding
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -58,7 +57,7 @@ internal class CatalogFragment : Fragment() {
 
     private fun onMovieClickListener(id: Int) {
         findNavController().navigatePush(
-            R.id.action_catalogFragment_to_detailFragment,
+            CatalogFragmentDirections.actionCatalogFragmentToDetailFragment(id)
         )
     }
 
