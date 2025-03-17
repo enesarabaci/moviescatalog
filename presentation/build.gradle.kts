@@ -60,4 +60,9 @@ dependencies {
     ksp(libs.hilt.android.compiler)
 
     implementation(libs.glide)
+
+    implementation(libs.androidx.media3)
+    implementation(libs.androidx.media3.ui)
+    implementation(libs.androidx.media3.hls)
+    implementation(libs.androidx.media3.dash)
 }

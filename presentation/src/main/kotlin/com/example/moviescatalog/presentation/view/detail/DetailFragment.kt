@@ -1,5 +1,6 @@
 package com.example.moviescatalog.presentation.view.detail
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,6 +13,7 @@ import com.example.moviescatalog.model.MovieData
 import com.example.moviescatalog.presentation.extension.collectWhenStarted
 import com.example.moviescatalog.presentation.extension.getMessage
 import com.example.moviescatalog.presentation.extension.loadImage
+import com.example.moviescatalog.presentation.view.player.PlayerActivity
 import com.example.moviescatalog.presentation.viewmodel.DetailViewModel
 import com.example.ui.databinding.FragmentDetailBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -37,6 +39,11 @@ class DetailFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         viewModel.movieDetailsStateFlow.collectWhenStarted(viewLifecycleOwner, ::updateUI)
+
+        binding.watchButton.setOnClickListener {
+            val playerIntent = Intent(requireContext(), PlayerActivity::class.java)
+            startActivity(playerIntent)
+        }
     }
 
     private fun updateUI(state: DataState<MovieData>) {
