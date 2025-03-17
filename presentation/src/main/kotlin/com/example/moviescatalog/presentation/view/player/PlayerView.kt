@@ -5,10 +5,12 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import androidx.annotation.OptIn
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.setPadding
 import androidx.core.view.updateLayoutParams
 import androidx.media3.common.VideoSize
 import androidx.media3.common.text.CueGroup
 import androidx.media3.common.util.UnstableApi
+import com.example.moviescatalog.presentation.extension.dpToPx
 import com.example.moviescatalog.presentation.extension.fade
 import com.example.ui.databinding.ViewPlayerBinding
 
@@ -20,6 +22,8 @@ internal class PlayerView @JvmOverloads constructor(
 ) : ConstraintLayout(context, attrs, defStyleAttr) {
 
     private val binding = ViewPlayerBinding.inflate(LayoutInflater.from(context), this)
+
+    // region Player
 
     var mcPlayer: MCPlayer? = null
         set(value) {
@@ -40,6 +44,10 @@ internal class PlayerView @JvmOverloads constructor(
 
             mcPlayer?.addMCPlayerListener(playerListener)
         }
+
+    // endregion
+
+    // region Listener
 
     private val playerListener = object : MCPlayer.MCPlayerListener {
 
@@ -75,7 +83,54 @@ internal class PlayerView @JvmOverloads constructor(
         override fun onCurrentTimeChanged(currentTime: Long) {
             super.onCurrentTimeChanged(currentTime)
 
+            binding.playerControlsView.updateCurrentTime(currentTime)
 
+            mcPlayer?.maxTime?.let { maxTime ->
+                binding.playerControlsView.updateRemainingTime(maxTime - currentTime)
+            }
+        }
+
+        override fun onMaxTimeChanged(maxTime: Long) {
+            super.onMaxTimeChanged(maxTime)
+
+            binding.playerControlsView.updateMaxTime(maxTime)
+        }
+
+        override fun onBufferedTimeChanged(bufferedTime: Long) {
+            super.onBufferedTimeChanged(bufferedTime)
+
+            binding.playerControlsView.updateBufferedTime(bufferedTime)
         }
     }
+
+    private val playerControlsViewListener =
+        object : PlayerControlsView.PlayerControlsViewListener {
+
+            override fun onScrubEnd(time: Long) {
+                mcPlayer?.seekTo(time)
+            }
+        }
+
+    // endregion
+
+    // region update UI
+
+    fun updateOrientation(isLandscape: Boolean) {
+        val playerControlsViewPadding = if (isLandscape)
+            context.dpToPx(28)
+        else
+            context.dpToPx(8)
+
+        binding.playerControlsView.setPadding(playerControlsViewPadding)
+    }
+
+    // endregion
+
+    // region Initialize
+
+    init {
+        binding.playerControlsView.setPlayerControlsViewListener(playerControlsViewListener)
+    }
+
+    // endregion
 }

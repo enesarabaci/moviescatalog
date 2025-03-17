@@ -10,7 +10,6 @@
         android:id="@+id/topBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="28dp"
         app:layout_constraintTop_toTopOf="parent">
 
         <androidx.appcompat.widget.AppCompatImageButton
@@ -79,5 +78,61 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/bottomBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/scrubHintTimeTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toTopOf="@id/timeBarView"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:text="01:54"
+            tools:translationX="250dp"
+            tools:visibility="visible" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/currentTimeTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:includeFontPadding="false"
+            app:layout_constraintBottom_toBottomOf="@id/timeBarView"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/timeBarView"
+            tools:text="00:11:40" />
+
+        <com.example.moviescatalog.presentation.view.player.TimeBarView
+            android:id="@+id/timeBarView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/remainingTimeTextView"
+            app:layout_constraintStart_toEndOf="@id/currentTimeTextView"
+            app:timeBar_barHeight="6dp"
+            app:timeBar_scrubberSize="24dp"
+            tools:timeBar_bufferedTime="75"
+            tools:timeBar_currentTime="50"
+            tools:timeBar_maxTime="100"
+            tools:timeBar_minTime="0" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/remainingTimeTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:includeFontPadding="false"
+            app:layout_constraintBottom_toBottomOf="@id/timeBarView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/timeBarView"
+            tools:text="00:11:40" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </merge>

@@ -57,6 +57,8 @@ class PlayerActivity : AppCompatActivity() {
 
         initializePlayerView()
 
+        updateOrientation()
+
         mcPlayer.start(
             VideoData(
                 id = "id",
@@ -76,6 +78,14 @@ class PlayerActivity : AppCompatActivity() {
         setupViewBinding()
         binding.playerContainer.addView(playerView)
         setContentView(binding.root)
+
+        updateOrientation()
+    }
+
+    private fun updateOrientation() {
+        playerView.updateOrientation(
+            isLandscape = resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+        )
     }
 
     private fun initializePlayerView() {

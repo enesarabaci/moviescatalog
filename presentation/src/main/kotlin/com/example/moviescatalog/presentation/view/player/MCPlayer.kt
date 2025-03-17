@@ -234,6 +234,7 @@ internal class MCPlayer(val context: Context) {
         fun onCues(cueGroup: CueGroup) {}
         fun onCurrentTimeChanged(currentTime: Long) {}
         fun onMaxTimeChanged(maxTime: Long) {}
+        fun onBufferedTimeChanged(bufferedTime: Long) {}
     }
 
     private var listeners = mutableListOf<MCPlayerListener>()
@@ -259,6 +260,9 @@ internal class MCPlayer(val context: Context) {
     val currentTime get() = exoPlayer?.currentPosition?.coerceAtLeast(0) ?: 0L
 
     val bufferedDuration get() = if (!isLiveStream) (exoPlayer?.totalBufferedDuration ?: 0) else 0L
+
+    val bufferedTime get() = currentTime + bufferedDuration
+
     val duration get() = maxTime - minTime
 
     // endregion
@@ -267,6 +271,7 @@ internal class MCPlayer(val context: Context) {
 
     private var lastCurrentTime: Long? = null
     private var lastMaxTime: Long? = null
+    private var lastBufferedTime: Long? = null
 
     private val secondsTimer by lazy {
         Timer(1000) {
@@ -279,6 +284,11 @@ internal class MCPlayer(val context: Context) {
             if (lastMaxTime != maxTime && maxTime != 0L) {
                 lastMaxTime = maxTime
                 triggerListeners { it.onMaxTimeChanged(maxTime) }
+            }
+
+            if (lastBufferedTime != bufferedTime && bufferedTime != 0L) {
+                lastBufferedTime = bufferedTime
+                triggerListeners { it.onBufferedTimeChanged(bufferedTime) }
             }
         }
     }
@@ -303,6 +313,8 @@ internal class MCPlayer(val context: Context) {
         player.playWhenReady = true
 
         videoDataLoaded = true
+
+        secondsTimer.start()
     }
 
     private var surfaceView: SurfaceView? = null
