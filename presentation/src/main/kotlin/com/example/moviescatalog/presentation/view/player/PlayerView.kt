@@ -9,6 +9,7 @@ import androidx.core.view.updateLayoutParams
 import androidx.media3.common.VideoSize
 import androidx.media3.common.text.CueGroup
 import androidx.media3.common.util.UnstableApi
+import com.example.moviescatalog.presentation.extension.fade
 import com.example.ui.databinding.ViewPlayerBinding
 
 @OptIn(UnstableApi::class)
@@ -18,7 +19,7 @@ internal class PlayerView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : ConstraintLayout(context, attrs, defStyleAttr) {
 
-    private val viewBinding = ViewPlayerBinding.inflate(LayoutInflater.from(context), this)
+    private val binding = ViewPlayerBinding.inflate(LayoutInflater.from(context), this)
 
     var mcPlayer: MCPlayer? = null
         set(value) {
@@ -33,19 +34,20 @@ internal class PlayerView @JvmOverloads constructor(
             field = value
 
             mcPlayer?.updatePlayerViews(
-                viewBinding.videoSurfaceView,
-                viewBinding.subtitleView
+                binding.videoSurfaceView,
+                binding.subtitleView
             )
 
             mcPlayer?.addMCPlayerListener(playerListener)
-
-//            mcPlayer?.let { player ->
-//                playerControlsManager = PlayerControlsManager(player, controlsProvider)
-//                playerControlsManager?.addListener(controlsListener)
-//            }
         }
 
     private val playerListener = object : MCPlayer.MCPlayerListener {
+
+        override fun onPlaybackStateChanged(state: MCPlayer.State) {
+            super.onPlaybackStateChanged(state)
+
+            binding.bufferingView.fade(state == MCPlayer.State.Buffering)
+        }
 
         override fun onVideoSizeChanged(videoSize: VideoSize) {
             super.onVideoSizeChanged(videoSize)
@@ -59,7 +61,7 @@ internal class PlayerView @JvmOverloads constructor(
 
             val videoAspectRatio = "${videoWidth * ratio}:${videoHeight}"
 
-            viewBinding.aspectRatioView.updateLayoutParams<LayoutParams> {
+            binding.aspectRatioView.updateLayoutParams<LayoutParams> {
                 dimensionRatio = videoAspectRatio
             }
         }
@@ -67,7 +69,7 @@ internal class PlayerView @JvmOverloads constructor(
         override fun onCues(cueGroup: CueGroup) {
             super.onCues(cueGroup)
 
-            viewBinding.subtitleView.setCues(cueGroup.cues)
+            binding.subtitleView.setCues(cueGroup.cues)
         }
 
         override fun onCurrentTimeChanged(currentTime: Long) {

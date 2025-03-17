@@ -7,7 +7,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class Timer(
-    var delayMillis: Long,
+    private var delayMillis: Long,
     private val repeats: Boolean = true,
     private val action: () -> Unit
 ) {

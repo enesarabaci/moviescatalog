@@ -10,7 +10,7 @@ import com.example.ui.databinding.ActivityPlayerBinding
 
 class PlayerActivity : AppCompatActivity() {
 
-    private lateinit var viewBinding: ActivityPlayerBinding
+    private lateinit var binding: ActivityPlayerBinding
     private var landscapeViewBinding: ActivityPlayerBinding? = null
     private var portraitViewBinding: ActivityPlayerBinding? = null
 
@@ -25,13 +25,13 @@ class PlayerActivity : AppCompatActivity() {
     private fun setupViewBinding() {
 
         fun setLandscapeViewBinding() {
-            viewBinding = landscapeViewBinding ?: ActivityPlayerBinding.inflate(layoutInflater)
-            landscapeViewBinding = viewBinding
+            binding = landscapeViewBinding ?: ActivityPlayerBinding.inflate(layoutInflater)
+            landscapeViewBinding = binding
         }
 
         fun setPortraitViewBinding() {
-            viewBinding = portraitViewBinding ?: ActivityPlayerBinding.inflate(layoutInflater)
-            portraitViewBinding = viewBinding
+            binding = portraitViewBinding ?: ActivityPlayerBinding.inflate(layoutInflater)
+            portraitViewBinding = binding
         }
 
         val orientation = resources.configuration.orientation
@@ -53,7 +53,7 @@ class PlayerActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         setupViewBinding()
-        setContentView(viewBinding.root)
+        setContentView(binding.root)
 
         initializePlayerView()
 
@@ -72,33 +72,22 @@ class PlayerActivity : AppCompatActivity() {
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
 
-        viewBinding.playerContainer.removeView(playerView)
+        binding.playerContainer.removeView(playerView)
         setupViewBinding()
-        viewBinding.playerContainer.addView(playerView)
-        setContentView(viewBinding.root)
+        binding.playerContainer.addView(playerView)
+        setContentView(binding.root)
     }
 
     private fun initializePlayerView() {
         mcPlayer.initializePlayer()
         playerView.mcPlayer = mcPlayer
 
-        viewBinding.playerContainer.addView(playerView)
+        binding.playerContainer.addView(playerView)
 
         playerView.updateLayoutParams<ConstraintLayout.LayoutParams> {
             width = MATCH_PARENT
             height = MATCH_PARENT
         }
-
-
-//        playerView.requestListener = this
-//        playerView.responseListener = this
-//        playerView.listener = this
-
-        // Configure parameters for the picture-in-picture mode. We do this at the first layout of
-        // the PlayerView because we use its layout position and size.
-//        playerView.doOnLayout { updatePictureInPictureParams() }
-//
-//        playerView.videoDataPlayState = viewModel.videoDataPlayState
     }
 
     override fun onDestroy() {
