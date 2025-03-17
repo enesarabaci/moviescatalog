@@ -3,17 +3,16 @@ package com.example.moviescatalog.presentation.view.player
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
+import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isVisible
-import com.example.moviescatalog.presentation.extension.dpToPx
-import com.example.moviescatalog.presentation.extension.fadeIn
-import com.example.moviescatalog.presentation.extension.fadeOut
 import com.example.ui.R
 import com.example.ui.databinding.ViewPlayerControlsBinding
 import java.util.Locale
 import java.util.concurrent.TimeUnit
 
-class PlayerControlsView @JvmOverloads constructor(
+internal class PlayerControlsView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
@@ -55,12 +54,33 @@ class PlayerControlsView @JvmOverloads constructor(
         }
     }
 
+    fun playbackStateChanged(state: MCPlayer.State) {
+        binding.playPauseButton.visibility = if (state == MCPlayer.State.Buffering)
+            View.INVISIBLE
+        else
+            View.VISIBLE
+
+        val drawable = if (state == MCPlayer.State.Playing)
+            R.drawable.ic_pause
+        else
+            R.drawable.ic_play
+
+        binding.playPauseButton.icon = ResourcesCompat.getDrawable(
+            resources,
+            drawable,
+            context.theme
+        )
+    }
+
     // endregion
 
     // region Listener
 
     interface PlayerControlsViewListener {
         fun onScrubEnd(time: Long)
+        fun onPlayPauseButtonClicked()
+        fun onSeekBackButtonClicked()
+        fun onSeekForwardButtonClicked()
     }
 
     private var playerControlsViewListener: PlayerControlsViewListener? = null
@@ -93,9 +113,21 @@ class PlayerControlsView @JvmOverloads constructor(
     // region Initialize
 
     init {
-        setBackgroundColor(resources.getColor(R.color.black_o50, context.theme))
+        setBackgroundColor(resources.getColor(R.color.black_o75, context.theme))
 
         binding.timeBarView.addListener(this)
+
+        binding.playPauseButton.setOnClickListener {
+            playerControlsViewListener?.onPlayPauseButtonClicked()
+        }
+
+        binding.seekBackButton.setOnClickListener {
+            playerControlsViewListener?.onSeekBackButtonClicked()
+        }
+
+        binding.seekForwardButton.setOnClickListener {
+            playerControlsViewListener?.onSeekForwardButtonClicked()
+        }
     }
 
     // endregion

@@ -55,6 +55,7 @@ internal class PlayerView @JvmOverloads constructor(
             super.onPlaybackStateChanged(state)
 
             binding.bufferingView.fade(state == MCPlayer.State.Buffering)
+            binding.playerControlsView.playbackStateChanged(state)
         }
 
         override fun onVideoSizeChanged(videoSize: VideoSize) {
@@ -108,6 +109,29 @@ internal class PlayerView @JvmOverloads constructor(
 
             override fun onScrubEnd(time: Long) {
                 mcPlayer?.seekTo(time)
+            }
+
+            override fun onPlayPauseButtonClicked() {
+                if (mcPlayer?.playerState == MCPlayer.State.Playing)
+                    mcPlayer?.pause()
+                else
+                    mcPlayer?.play()
+            }
+
+            override fun onSeekBackButtonClicked() {
+                val player = mcPlayer ?: return
+
+                player.seekTo(
+                    player.currentTime - 10_000
+                )
+            }
+
+            override fun onSeekForwardButtonClicked() {
+                val player = mcPlayer ?: return
+
+                player.seekTo(
+                    player.currentTime + 10_000
+                )
             }
         }
 
