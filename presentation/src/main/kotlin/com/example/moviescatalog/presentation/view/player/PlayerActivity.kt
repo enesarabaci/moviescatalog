@@ -6,12 +6,17 @@ import android.content.pm.ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
 import android.content.pm.ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
 import android.content.res.Configuration
 import android.content.res.Resources
+import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.view.OrientationEventListener
+import android.view.View
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.core.view.updateLayoutParams
 import com.example.ui.databinding.ActivityPlayerBinding
 
@@ -89,6 +94,48 @@ class PlayerActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         updateOrientation()
+        updateSystemNavigationVisibility()
+    }
+
+    private fun updateSystemNavigationVisibility() {
+        when (resources.configuration.orientation) {
+            Configuration.ORIENTATION_PORTRAIT -> showSystemNavigation()
+            Configuration.ORIENTATION_LANDSCAPE -> hideSystemNavigation()
+            else -> Unit
+        }
+    }
+
+    private fun hideSystemNavigation() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            WindowInsetsControllerCompat(window, window.decorView).let { controller ->
+                controller.hide(WindowInsetsCompat.Type.systemBars())
+                controller.systemBarsBehavior =
+                    WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+            }
+        } else {
+            // Pre R
+            @Suppress("DEPRECATION")
+            window.decorView.systemUiVisibility =
+                View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_FULLSCREEN or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+        }
+
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+    }
+
+    private fun showSystemNavigation() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            WindowInsetsControllerCompat(window, window.decorView).let { controller ->
+                controller.show(WindowInsetsCompat.Type.systemBars())
+                controller.systemBarsBehavior =
+                    WindowInsetsControllerCompat.BEHAVIOR_DEFAULT
+            }
+        } else {
+            // Pre R
+            @Suppress("DEPRECATION")
+            window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_VISIBLE
+        }
+
+        WindowCompat.setDecorFitsSystemWindows(window, true)
     }
 
     private var orientationEventListener: OrientationEventListener? = null
@@ -159,6 +206,10 @@ class PlayerActivity : AppCompatActivity() {
 
             orientationEventListener?.enable()
         }
+
+        override fun onCloseButtonClicked() {
+            finish()
+        }
     }
 
     private fun initializePlayerView() {
@@ -173,6 +224,18 @@ class PlayerActivity : AppCompatActivity() {
             width = MATCH_PARENT
             height = MATCH_PARENT
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+        mcPlayer.autoResume()
+    }
+
+    override fun onStop() {
+        super.onStop()
+
+        mcPlayer.autoPause()
     }
 
     override fun onDestroy() {

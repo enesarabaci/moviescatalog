@@ -95,6 +95,7 @@ internal class PlayerControlsView @JvmOverloads constructor(
         fun onSeekBackButtonClicked()
         fun onSeekForwardButtonClicked()
         fun onZoomButtonClicked()
+        fun onCloseButtonClicked()
     }
 
     private var playerControlsViewListener: PlayerControlsViewListener? = null
@@ -145,6 +146,10 @@ internal class PlayerControlsView @JvmOverloads constructor(
 
         binding.zoomButton.setOnClickListener {
             playerControlsViewListener?.onZoomButtonClicked()
+        }
+
+        binding.closeButton.setOnClickListener {
+            playerControlsViewListener?.onCloseButtonClicked()
         }
     }
 

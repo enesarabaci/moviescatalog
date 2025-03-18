@@ -51,6 +51,7 @@ internal class PlayerView @JvmOverloads constructor(
 
     interface PlayerViewListener {
         fun onZoomButtonClicked()
+        fun onCloseButtonClicked()
     }
 
     private var playerViewListener: PlayerViewListener? = null
@@ -145,6 +146,10 @@ internal class PlayerView @JvmOverloads constructor(
 
             override fun onZoomButtonClicked() {
                 playerViewListener?.onZoomButtonClicked()
+            }
+
+            override fun onCloseButtonClicked() {
+                playerViewListener?.onCloseButtonClicked()
             }
         }
 
