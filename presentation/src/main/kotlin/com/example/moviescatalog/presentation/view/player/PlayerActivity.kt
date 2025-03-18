@@ -1,7 +1,14 @@
 package com.example.moviescatalog.presentation.view.player
 
+import android.annotation.SuppressLint
+import android.content.pm.ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
+import android.content.pm.ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
+import android.content.pm.ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
 import android.content.res.Configuration
+import android.content.res.Resources
 import android.os.Bundle
+import android.provider.Settings
+import android.view.OrientationEventListener
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -59,6 +66,8 @@ class PlayerActivity : AppCompatActivity() {
 
         updateOrientation()
 
+        setOrientationChangeListener()
+
         mcPlayer.start(
             VideoData(
                 id = "id",
@@ -82,10 +91,74 @@ class PlayerActivity : AppCompatActivity() {
         updateOrientation()
     }
 
+    private var orientationEventListener: OrientationEventListener? = null
+    private var ignoreNextConfigurationChange: Int? = null
+
+    private fun setOrientationChangeListener() {
+        orientationEventListener = object : OrientationEventListener(this) {
+            override fun onOrientationChanged(orientation: Int) {
+                if (ignoreNextConfigurationChange == null) {
+                    disable()
+                    return
+                }
+
+                if (orientation == ORIENTATION_UNKNOWN)
+                    return
+
+                if ((orientation >= 350 || orientation < 10) || (orientation in 170..189) && isRotationEnabled()) {
+                    // PORTRAIT
+
+                    if (ignoreNextConfigurationChange == Configuration.ORIENTATION_LANDSCAPE) {
+                        requestedOrientation = SCREEN_ORIENTATION_UNSPECIFIED
+                        disable()
+                    }
+                } else if ((orientation in 80..99) || (orientation in 260..279) && isRotationEnabled()) {
+                    // LANDSCAPE
+
+                    if (ignoreNextConfigurationChange == Configuration.ORIENTATION_PORTRAIT) {
+                        requestedOrientation = SCREEN_ORIENTATION_UNSPECIFIED
+                        disable()
+                    }
+                }
+            }
+        }
+    }
+
+    private fun isRotationEnabled(): Boolean {
+        return Settings.System.getInt(
+            contentResolver,
+            Settings.System.ACCELEROMETER_ROTATION, 0
+        ) == 1
+    }
+
     private fun updateOrientation() {
         playerView.updateOrientation(
             isLandscape = resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
         )
+    }
+
+    @SuppressLint("SourceLockedOrientationActivity")
+    private val playerViewListener = object : PlayerView.PlayerViewListener {
+        override fun onZoomButtonClicked() {
+
+            val orientation = resources.configuration.orientation
+
+            when (orientation) {
+                Configuration.ORIENTATION_LANDSCAPE -> {
+                    requestedOrientation = SCREEN_ORIENTATION_SENSOR_PORTRAIT
+                    ignoreNextConfigurationChange = Configuration.ORIENTATION_LANDSCAPE
+                }
+
+                Configuration.ORIENTATION_PORTRAIT -> {
+                    requestedOrientation = SCREEN_ORIENTATION_SENSOR_LANDSCAPE
+                    ignoreNextConfigurationChange = Configuration.ORIENTATION_PORTRAIT
+                }
+
+                else -> {}
+            }
+
+            orientationEventListener?.enable()
+        }
     }
 
     private fun initializePlayerView() {
@@ -93,6 +166,8 @@ class PlayerActivity : AppCompatActivity() {
         playerView.mcPlayer = mcPlayer
 
         binding.playerContainer.addView(playerView)
+
+        playerView.setPlayerViewListener(playerViewListener)
 
         playerView.updateLayoutParams<ConstraintLayout.LayoutParams> {
             width = MATCH_PARENT
@@ -104,5 +179,6 @@ class PlayerActivity : AppCompatActivity() {
         super.onDestroy()
 
         mcPlayer.clear()
+        orientationEventListener?.disable()
     }
 }

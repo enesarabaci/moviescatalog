@@ -57,7 +57,7 @@ class RailViewHolder(
                 super.onScrolled(recyclerView, dx, dy)
 
                 onScrollStateChangedListener(
-                    adapterPosition,
+                    absoluteAdapterPosition,
                     recyclerView.layoutManager?.onSaveInstanceState()
                 )
             }

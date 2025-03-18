@@ -72,6 +72,19 @@ internal class PlayerControlsView @JvmOverloads constructor(
         )
     }
 
+    fun updateZoomButton(isFullScreen: Boolean) {
+        val drawable = if (isFullScreen)
+            R.drawable.ic_zoom_out
+        else
+            R.drawable.ic_zoom_in
+
+        binding.zoomButton.icon = ResourcesCompat.getDrawable(
+            resources,
+            drawable,
+            context.theme
+        )
+    }
+
     // endregion
 
     // region Listener
@@ -81,6 +94,7 @@ internal class PlayerControlsView @JvmOverloads constructor(
         fun onPlayPauseButtonClicked()
         fun onSeekBackButtonClicked()
         fun onSeekForwardButtonClicked()
+        fun onZoomButtonClicked()
     }
 
     private var playerControlsViewListener: PlayerControlsViewListener? = null
@@ -127,6 +141,10 @@ internal class PlayerControlsView @JvmOverloads constructor(
 
         binding.seekForwardButton.setOnClickListener {
             playerControlsViewListener?.onSeekForwardButtonClicked()
+        }
+
+        binding.zoomButton.setOnClickListener {
+            playerControlsViewListener?.onZoomButtonClicked()
         }
     }
 

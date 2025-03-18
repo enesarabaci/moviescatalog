@@ -49,6 +49,15 @@ internal class PlayerView @JvmOverloads constructor(
 
     // region Listener
 
+    interface PlayerViewListener {
+        fun onZoomButtonClicked()
+    }
+
+    private var playerViewListener: PlayerViewListener? = null
+    fun setPlayerViewListener(listener: PlayerViewListener) {
+        playerViewListener = listener
+    }
+
     private val playerListener = object : MCPlayer.MCPlayerListener {
 
         override fun onPlaybackStateChanged(state: MCPlayer.State) {
@@ -133,6 +142,10 @@ internal class PlayerView @JvmOverloads constructor(
                     player.currentTime + 10_000
                 )
             }
+
+            override fun onZoomButtonClicked() {
+                playerViewListener?.onZoomButtonClicked()
+            }
         }
 
     // endregion
@@ -146,6 +159,8 @@ internal class PlayerView @JvmOverloads constructor(
             context.dpToPx(8)
 
         binding.playerControlsView.setPadding(playerControlsViewPadding)
+
+        binding.playerControlsView.updateZoomButton(isLandscape)
     }
 
     // endregion
