@@ -73,6 +73,8 @@ class PlayerActivity : AppCompatActivity() {
 
         setOrientationChangeListener()
 
+        updateSystemNavigationVisibility()
+
         mcPlayer.start(
             VideoData(
                 id = "id",

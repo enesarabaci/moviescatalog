@@ -7,6 +7,8 @@ import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isVisible
+import com.example.moviescatalog.presentation.extension.fadeIn
+import com.example.moviescatalog.presentation.extension.fadeOut
 import com.example.ui.R
 import com.example.ui.databinding.ViewPlayerControlsBinding
 import java.util.Locale
@@ -85,6 +87,20 @@ internal class PlayerControlsView @JvmOverloads constructor(
         )
     }
 
+    private val hideTimer = Timer(3000, false) {
+        hide()
+    }
+
+    fun show() {
+        fadeIn()
+        hideTimer.start()
+    }
+
+    fun hide() {
+        fadeOut()
+        hideTimer.stop()
+    }
+
     // endregion
 
     // region Listener
@@ -128,7 +144,9 @@ internal class PlayerControlsView @JvmOverloads constructor(
     // region Initialize
 
     init {
-        setBackgroundColor(resources.getColor(R.color.black_o75, context.theme))
+        setBackgroundColor(resources.getColor(R.color.black_o50, context.theme))
+
+        hideTimer.start()
 
         binding.timeBarView.addListener(this)
 
