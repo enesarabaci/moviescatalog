@@ -4,7 +4,7 @@ import android.os.Parcelable
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.moviescatalog.domain.GetMoviesUseCase
+import com.example.moviescatalog.domain.usecase.GetMoviesUseCase
 import com.example.moviescatalog.model.CatalogState
 import com.example.moviescatalog.model.MovieCatalog
 import com.example.moviescatalog.model.MovieListData

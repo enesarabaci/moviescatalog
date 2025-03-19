@@ -3,7 +3,7 @@ package com.example.moviescatalog.presentation.viewmodel
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.moviescatalog.domain.GetMovieDetailsUseCase
+import com.example.moviescatalog.domain.usecase.GetMovieDetailsUseCase
 import com.example.moviescatalog.model.DataState
 import com.example.moviescatalog.model.MovieData
 import dagger.hilt.android.lifecycle.HiltViewModel
