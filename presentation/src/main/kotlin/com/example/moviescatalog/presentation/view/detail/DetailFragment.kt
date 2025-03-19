@@ -8,9 +8,12 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.moviescatalog.model.DataState
 import com.example.moviescatalog.model.MovieData
+import com.example.moviescatalog.presentation.extension.applyBottomInset
+import com.example.moviescatalog.presentation.extension.applyTopInset
 import com.example.moviescatalog.presentation.extension.collectWhenStarted
 import com.example.moviescatalog.presentation.extension.getMessage
 import com.example.moviescatalog.presentation.extension.loadImage
@@ -49,6 +52,13 @@ class DetailFragment : Fragment() {
             playerIntent.putExtra(KEY_CONTENT_ID, args.id)
             startActivity(playerIntent)
         }
+
+        binding.closeButton.setOnClickListener {
+            findNavController().popBackStack()
+        }
+
+        binding.topBar.applyTopInset()
+        binding.bottomBar.applyBottomInset()
     }
 
     private fun updateUI(state: DataState<MovieData>) {

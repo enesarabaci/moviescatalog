@@ -6,6 +6,7 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
 import androidx.core.animation.doOnEnd
+import androidx.core.view.ViewCompat
 import androidx.core.view.isVisible
 
 fun View.fade(
@@ -60,8 +61,8 @@ fun View.fadeOut(
 
 fun View.showCustomTouchEffect(pressed: Boolean) {
     val alphaAnimator = ObjectAnimator.ofFloat(this, "alpha", if (pressed) 0.5f else 1f)
-    val scaleXAnimator = ObjectAnimator.ofFloat(this, "scaleX", if (pressed) 0.95f else 1f)
-    val scaleYAnimator = ObjectAnimator.ofFloat(this, "scaleY", if (pressed) 0.95f else 1f)
+    val scaleXAnimator = ObjectAnimator.ofFloat(this, "scaleX", if (pressed) 0.9f else 1f)
+    val scaleYAnimator = ObjectAnimator.ofFloat(this, "scaleY", if (pressed) 0.9f else 1f)
 
     alphaAnimator.interpolator = AccelerateDecelerateInterpolator()
     scaleXAnimator.interpolator = AccelerateDecelerateInterpolator()
@@ -109,5 +110,19 @@ fun View.enableCustomTouchEffect() {
         }
 
         view.isClickable
+    }
+}
+
+fun View.applyTopInset() {
+    setOnApplyWindowInsetsListener { view, insets ->
+        view.setPadding(0, insets.systemWindowInsetTop, 0, 0)
+        insets
+    }
+}
+
+fun View.applyBottomInset() {
+    setOnApplyWindowInsetsListener { view, insets ->
+        view.setPadding(0, 0, 0, insets.systemWindowInsetBottom)
+        insets
     }
 }
