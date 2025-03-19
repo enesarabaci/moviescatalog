@@ -2,6 +2,7 @@ package com.example.moviescatalog.presentation.view.catalog.viewholder
 
 import androidx.recyclerview.widget.RecyclerView
 import com.example.moviescatalog.model.MovieData
+import com.example.moviescatalog.presentation.extension.dpToPx
 import com.example.moviescatalog.presentation.extension.enableCustomTouchEffect
 import com.example.moviescatalog.presentation.extension.loadImage
 import com.example.ui.databinding.ItemPosterBinding
@@ -16,8 +17,11 @@ class PosterViewHolder(
     }
 
     fun bind(movie: MovieData) {
-        movie.posterUrl?.let {
-            binding.posterImageView.loadImage(it)
+        movie.posterUrl?.let { posterUrl ->
+            binding.posterImageView.loadImage(
+                url = posterUrl,
+                cornerRadius = binding.root.context.dpToPx(16)
+            )
         }
 
         binding.root.setOnClickListener {

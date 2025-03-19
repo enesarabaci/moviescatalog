@@ -9,7 +9,6 @@
         android:id="@+id/posterImageView"
         android:layout_width="0dp"
         android:layout_height="200dp"
-        android:scaleType="centerCrop"
         android:src="@color/black_o50"
         app:layout_constraintDimensionRatio="33:50"
         app:layout_constraintStart_toStartOf="parent"
