@@ -7,6 +7,7 @@ import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isVisible
+import com.example.moviescatalog.presentation.extension.enableCustomTouchEffect
 import com.example.moviescatalog.presentation.extension.fadeIn
 import com.example.moviescatalog.presentation.extension.fadeOut
 import com.example.moviescatalog.presentation.view.player.MCPlayer
@@ -159,6 +160,12 @@ internal class PlayerControlsView @JvmOverloads constructor(
         hideTimer.start()
 
         binding.timeBarView.addListener(timeBarViewListener)
+
+        binding.playPauseButton.enableCustomTouchEffect()
+        binding.seekBackButton.enableCustomTouchEffect()
+        binding.seekForwardButton.enableCustomTouchEffect()
+        binding.zoomButton.enableCustomTouchEffect()
+        binding.closeButton.enableCustomTouchEffect()
 
         binding.playPauseButton.setOnClickListener {
             hideTimer.reset()
