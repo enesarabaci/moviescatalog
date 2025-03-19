@@ -17,12 +17,10 @@ class PosterViewHolder(
     }
 
     fun bind(movie: MovieData) {
-        movie.posterUrl?.let { posterUrl ->
-            binding.posterImageView.loadImage(
-                url = posterUrl,
-                cornerRadius = binding.root.context.dpToPx(16)
-            )
-        }
+        binding.posterImageView.loadImage(
+            url = movie.posterUrl ?: "",
+            cornerRadius = binding.root.context.dpToPx(16)
+        )
 
         binding.root.setOnClickListener {
             movie.id?.let(onMovieClickListener)

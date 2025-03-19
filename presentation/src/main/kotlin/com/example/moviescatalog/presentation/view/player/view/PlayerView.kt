@@ -173,7 +173,7 @@ internal class PlayerView @JvmOverloads constructor(
 
     fun updateOrientation(isLandscape: Boolean) {
         val playerControlsViewPadding = if (isLandscape)
-            context.dpToPx(28)
+            context.dpToPx(20)
         else
             context.dpToPx(8)
 

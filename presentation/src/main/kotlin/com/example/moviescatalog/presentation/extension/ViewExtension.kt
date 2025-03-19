@@ -68,9 +68,9 @@ fun View.showCustomTouchEffect(pressed: Boolean) {
     scaleXAnimator.interpolator = AccelerateDecelerateInterpolator()
     scaleYAnimator.interpolator = AccelerateDecelerateInterpolator()
 
-    alphaAnimator.duration = 75
-    scaleXAnimator.duration = 75
-    scaleYAnimator.duration = 75
+    alphaAnimator.duration = 100
+    scaleXAnimator.duration = 100
+    scaleYAnimator.duration = 100
 
     alphaAnimator.start()
     scaleXAnimator.start()

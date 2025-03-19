@@ -34,6 +34,7 @@ class RailViewHolder(
 
         binding.catalogTitleTextView.text = catalogState.catalog.getTitle(context)
         binding.railErrorTextView.isVisible = catalogState is CatalogState.Error
+        binding.loadingProgressBar.isVisible = catalogState is CatalogState.Loading
 
         when (catalogState) {
             is CatalogState.Error -> {
