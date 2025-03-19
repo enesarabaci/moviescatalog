@@ -11,6 +11,7 @@
         <item name="android:colorBackground">@color/dark</item>
         <item name="android:windowBackground">@color/dark</item>
         <item name="android:textColor">@color/white</item>
+        <item name="android:fontFamily">@font/alexandria_medium</item>
     </style>
 
     <style name="PlayerActivityTheme" parent="Theme.MoviesCatalog">

@@ -154,7 +154,7 @@ internal class PlayerControlsView @JvmOverloads constructor(
     // region Initialize
 
     init {
-        setBackgroundColor(resources.getColor(R.color.black_o50, context.theme))
+        setBackgroundColor(resources.getColor(R.color.black_o75, context.theme))
 
         hideTimer.start()
 

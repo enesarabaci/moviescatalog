@@ -243,9 +243,6 @@ class PlayerActivity : AppCompatActivity() {
     }
 
     private fun updateUI(state: DataState<MovieData>) {
-        if (resources.configuration.orientation != Configuration.ORIENTATION_PORTRAIT)
-            return
-
         binding.loadingProgressBar?.isVisible = state is DataState.Loading
 
         when (state) {
