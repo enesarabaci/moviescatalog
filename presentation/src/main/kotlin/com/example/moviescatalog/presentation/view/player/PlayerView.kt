@@ -183,6 +183,10 @@ internal class PlayerView @JvmOverloads constructor(
         binding.playerControlsView.updateZoomButton(isLandscape)
     }
 
+    fun setTitle(title: String?) {
+        binding.playerControlsView.setTitle(title)
+    }
+
     private fun togglePlayerControls() {
         if (binding.playerControlsView.isVisible)
             hideControls()

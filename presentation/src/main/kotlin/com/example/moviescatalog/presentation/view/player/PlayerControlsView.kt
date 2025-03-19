@@ -27,6 +27,10 @@ internal class PlayerControlsView @JvmOverloads constructor(
 
     // region Update UI
 
+    fun setTitle(title: String?) {
+        binding.titleTextView.text = title
+    }
+
     fun updateCurrentTime(currentTime: Long) {
         binding.timeBarView.currentTime = currentTime
         binding.currentTimeTextView.text = formatTime(currentTime)
@@ -119,6 +123,12 @@ internal class PlayerControlsView @JvmOverloads constructor(
         playerControlsViewListener = listener
     }
 
+    override fun onScrubStart(timeBar: TimeBarView, time: Long) {
+        super.onScrubStart(timeBar, time)
+
+        hideTimer.stop()
+    }
+
     override fun onScrubMove(timeBar: TimeBarView, time: Long) {
         super.onScrubMove(timeBar, time)
 
@@ -137,6 +147,8 @@ internal class PlayerControlsView @JvmOverloads constructor(
         binding.scrubHintTimeTextView.isVisible = false
 
         playerControlsViewListener?.onScrubEnd(time)
+
+        hideTimer.start()
     }
 
     // endregion
@@ -151,14 +163,17 @@ internal class PlayerControlsView @JvmOverloads constructor(
         binding.timeBarView.addListener(this)
 
         binding.playPauseButton.setOnClickListener {
+            hideTimer.reset()
             playerControlsViewListener?.onPlayPauseButtonClicked()
         }
 
         binding.seekBackButton.setOnClickListener {
+            hideTimer.reset()
             playerControlsViewListener?.onSeekBackButtonClicked()
         }
 
         binding.seekForwardButton.setOnClickListener {
+            hideTimer.reset()
             playerControlsViewListener?.onSeekForwardButtonClicked()
         }
 

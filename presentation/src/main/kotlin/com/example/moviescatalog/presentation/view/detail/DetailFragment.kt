@@ -8,12 +8,14 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.navArgs
 import com.example.moviescatalog.model.DataState
 import com.example.moviescatalog.model.MovieData
 import com.example.moviescatalog.presentation.extension.collectWhenStarted
 import com.example.moviescatalog.presentation.extension.getMessage
 import com.example.moviescatalog.presentation.extension.loadImage
 import com.example.moviescatalog.presentation.view.player.PlayerActivity
+import com.example.moviescatalog.presentation.view.player.PlayerActivity.Companion.KEY_CONTENT_ID
 import com.example.moviescatalog.presentation.viewmodel.DetailViewModel
 import com.example.ui.databinding.FragmentDetailBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -24,6 +26,8 @@ class DetailFragment : Fragment() {
     private lateinit var binding: FragmentDetailBinding
 
     private val viewModel: DetailViewModel by viewModels()
+
+    private val args: DetailFragmentArgs by navArgs()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -42,6 +46,7 @@ class DetailFragment : Fragment() {
 
         binding.watchButton.setOnClickListener {
             val playerIntent = Intent(requireContext(), PlayerActivity::class.java)
+            playerIntent.putExtra(KEY_CONTENT_ID, args.id)
             startActivity(playerIntent)
         }
     }

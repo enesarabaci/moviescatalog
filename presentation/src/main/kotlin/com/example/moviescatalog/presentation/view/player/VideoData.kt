@@ -15,8 +15,6 @@ data class VideoData(
     val id: String,
     val drmScheme: DrmScheme = DrmScheme.Widevine,
     val url: String? = null,
-    val title: String? = null,
-    val mediaId: String? = null,
     val licenseUrl: String? = null,
 ) {
 
@@ -28,7 +26,7 @@ data class VideoData(
             return MediaItem.Builder()
                 .setUri(url)
                 .setMimeType(inferStreamType().toMimeType())
-                .setMediaMetadata(MediaMetadata.Builder().setTitle(title).build())
+                .setMediaMetadata(MediaMetadata.Builder().build())
                 .setMediaId(id)
                 .setDrmConfiguration(
                     DrmConfiguration.Builder(drmScheme.toUUID())

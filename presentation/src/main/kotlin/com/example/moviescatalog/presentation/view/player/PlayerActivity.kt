@@ -5,26 +5,36 @@ import android.content.pm.ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
 import android.content.pm.ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
 import android.content.pm.ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
 import android.content.res.Configuration
-import android.content.res.Resources
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.view.OrientationEventListener
 import android.view.View
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
+import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
+import androidx.core.view.isVisible
 import androidx.core.view.updateLayoutParams
+import com.example.moviescatalog.model.DataState
+import com.example.moviescatalog.model.MovieData
+import com.example.moviescatalog.presentation.extension.collectWhenStarted
+import com.example.moviescatalog.presentation.extension.getMessage
+import com.example.moviescatalog.presentation.viewmodel.PlayerViewModel
 import com.example.ui.databinding.ActivityPlayerBinding
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Job
 
+@AndroidEntryPoint
 class PlayerActivity : AppCompatActivity() {
 
+    private val viewModel: PlayerViewModel by viewModels()
+
     private lateinit var binding: ActivityPlayerBinding
-    private var landscapeViewBinding: ActivityPlayerBinding? = null
-    private var portraitViewBinding: ActivityPlayerBinding? = null
 
     private val playerView by lazy {
         PlayerView(this)
@@ -35,36 +45,18 @@ class PlayerActivity : AppCompatActivity() {
     }
 
     private fun setupViewBinding() {
+        binding = ActivityPlayerBinding.inflate(layoutInflater)
+    }
 
-        fun setLandscapeViewBinding() {
-            binding = landscapeViewBinding ?: ActivityPlayerBinding.inflate(layoutInflater)
-            landscapeViewBinding = binding
-        }
-
-        fun setPortraitViewBinding() {
-            binding = portraitViewBinding ?: ActivityPlayerBinding.inflate(layoutInflater)
-            portraitViewBinding = binding
-        }
-
-        val orientation = resources.configuration.orientation
-
-        when (orientation) {
-            Configuration.ORIENTATION_LANDSCAPE -> {
-                setLandscapeViewBinding()
-            }
-
-            Configuration.ORIENTATION_PORTRAIT -> {
-                setPortraitViewBinding()
-            }
-
-            else -> {}
-        }
+    companion object {
+        const val KEY_CONTENT_ID = "KEY_CONTENT_ID"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setupViewBinding()
+
         setContentView(binding.root)
 
         initializePlayerView()
@@ -75,16 +67,15 @@ class PlayerActivity : AppCompatActivity() {
 
         updateSystemNavigationVisibility()
 
-        mcPlayer.start(
-            VideoData(
-                id = "id",
-                drmScheme = VideoData.DrmScheme.Widevine,
-                url = "https://storage.googleapis.com/wvmedia/cenc/h264/tears/tears.mpd",
-                title = "title",
-                mediaId = "mediaId",
-                licenseUrl = "https://proxy.uat.widevine.com/proxy?video_id=2015_tears&provider=widevine_test"
-            )
-        )
+        collectDetails()
+
+        collectViewModel()
+
+        intent?.getIntExtra(KEY_CONTENT_ID, -1)?.let { contentId ->
+            if (contentId != -1) {
+                viewModel.getMovieDetails(contentId)
+            }
+        }
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {
@@ -97,6 +88,8 @@ class PlayerActivity : AppCompatActivity() {
 
         updateOrientation()
         updateSystemNavigationVisibility()
+
+        collectDetails()
     }
 
     private fun updateSystemNavigationVisibility() {
@@ -225,6 +218,54 @@ class PlayerActivity : AppCompatActivity() {
         playerView.updateLayoutParams<ConstraintLayout.LayoutParams> {
             width = MATCH_PARENT
             height = MATCH_PARENT
+        }
+    }
+
+    private var detailsJob: Job? = null
+
+    private fun collectDetails() {
+        detailsJob?.cancel()
+
+        detailsJob = viewModel.movieDetailsStateFlow.collectWhenStarted(
+            lifecycleOwner = this,
+            action = ::updateUI
+        )
+    }
+
+    private fun collectViewModel() {
+        viewModel.videoDataState.collectWhenStarted(this, ::videoDataReceived)
+    }
+
+    private fun videoDataReceived(videoData: VideoData) {
+        mcPlayer.start(videoData)
+    }
+
+    private fun updateUI(state: DataState<MovieData>) {
+        if (resources.configuration.orientation != Configuration.ORIENTATION_PORTRAIT)
+            return
+
+        binding.loadingProgressBar?.isVisible = state is DataState.Loading
+
+        when (state) {
+            is DataState.Success<MovieData> -> {
+                val movieData = state.data
+
+                playerView.setTitle(movieData.title)
+
+                binding.titleTextView?.text = movieData.title
+                binding.overviewTextView?.text = movieData.overview
+            }
+
+            is DataState.Error -> {
+                Toast.makeText(
+                    this,
+                    state.errorType.getMessage(this),
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+
+            DataState.Loading -> {}
+            DataState.Idle -> {}
         }
     }
 
