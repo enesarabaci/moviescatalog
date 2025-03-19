@@ -1,7 +1,6 @@
-package com.example.moviescatalog.presentation.view.catalog
+package com.example.moviescatalog.presentation.view.catalog.viewholder
 
 import android.os.Parcelable
-import android.util.Log
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ItemDecoration
@@ -9,6 +8,7 @@ import com.example.moviescatalog.model.CatalogState
 import com.example.moviescatalog.model.MovieListData
 import com.example.moviescatalog.presentation.extension.getMessage
 import com.example.moviescatalog.presentation.extension.getTitle
+import com.example.moviescatalog.presentation.view.catalog.adapter.RailAdapter
 import com.example.ui.databinding.ItemRailBinding
 
 class RailViewHolder(

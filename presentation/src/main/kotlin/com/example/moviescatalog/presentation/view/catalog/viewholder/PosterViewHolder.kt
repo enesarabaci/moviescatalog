@@ -1,4 +1,4 @@
-package com.example.moviescatalog.presentation.view.catalog
+package com.example.moviescatalog.presentation.view.catalog.viewholder
 
 import androidx.recyclerview.widget.RecyclerView
 import com.example.moviescatalog.model.MovieData

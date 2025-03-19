@@ -14,8 +14,8 @@ import com.example.moviescatalog.model.MovieData
 import com.example.moviescatalog.presentation.extension.collectWhenStarted
 import com.example.moviescatalog.presentation.extension.getMessage
 import com.example.moviescatalog.presentation.extension.loadImage
-import com.example.moviescatalog.presentation.view.player.PlayerActivity
-import com.example.moviescatalog.presentation.view.player.PlayerActivity.Companion.KEY_CONTENT_ID
+import com.example.moviescatalog.presentation.view.player.view.PlayerActivity
+import com.example.moviescatalog.presentation.view.player.view.PlayerActivity.Companion.KEY_CONTENT_ID
 import com.example.moviescatalog.presentation.viewmodel.DetailViewModel
 import com.example.ui.databinding.FragmentDetailBinding
 import dagger.hilt.android.AndroidEntryPoint

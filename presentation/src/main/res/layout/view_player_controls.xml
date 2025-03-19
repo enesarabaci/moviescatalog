@@ -111,7 +111,7 @@
             app:layout_constraintTop_toTopOf="@id/timeBarView"
             tools:text="00:11:40" />
 
-        <com.example.moviescatalog.presentation.view.player.TimeBarView
+        <com.example.moviescatalog.presentation.view.player.view.TimeBarView
             android:id="@+id/timeBarView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

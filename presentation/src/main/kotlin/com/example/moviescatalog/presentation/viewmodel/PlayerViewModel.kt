@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.moviescatalog.domain.GetMovieDetailsUseCase
 import com.example.moviescatalog.model.DataState
 import com.example.moviescatalog.model.MovieData
-import com.example.moviescatalog.presentation.view.player.VideoData
+import com.example.moviescatalog.presentation.view.player.model.VideoData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

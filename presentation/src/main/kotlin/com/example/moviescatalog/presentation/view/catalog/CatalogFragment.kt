@@ -15,6 +15,7 @@ import com.example.moviescatalog.model.MovieListData
 import com.example.moviescatalog.presentation.extension.collectWhenStarted
 import com.example.moviescatalog.presentation.extension.dpToPx
 import com.example.moviescatalog.presentation.extension.navigatePush
+import com.example.moviescatalog.presentation.view.catalog.adapter.CatalogAdapter
 import com.example.moviescatalog.presentation.viewmodel.CatalogViewModel
 import com.example.ui.databinding.FragmentCatalogBinding
 import dagger.hilt.android.AndroidEntryPoint

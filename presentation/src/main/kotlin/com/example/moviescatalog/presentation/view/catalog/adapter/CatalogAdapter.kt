@@ -1,4 +1,4 @@
-package com.example.moviescatalog.presentation.view.catalog
+package com.example.moviescatalog.presentation.view.catalog.adapter
 
 import android.graphics.Rect
 import android.os.Parcelable
@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.moviescatalog.model.CatalogState
 import com.example.moviescatalog.model.MovieListData
 import com.example.moviescatalog.presentation.extension.dpToPx
+import com.example.moviescatalog.presentation.view.catalog.viewholder.RailViewHolder
 import com.example.ui.databinding.ItemRailBinding
 
 class CatalogAdapter(

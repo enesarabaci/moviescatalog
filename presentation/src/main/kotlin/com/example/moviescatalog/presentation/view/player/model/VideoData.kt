@@ -1,4 +1,4 @@
-package com.example.moviescatalog.presentation.view.player
+package com.example.moviescatalog.presentation.view.player.model
 
 import androidx.annotation.OptIn
 import androidx.core.net.toUri

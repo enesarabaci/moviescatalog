@@ -1,6 +1,7 @@
-package com.example.moviescatalog.presentation.view.player
+package com.example.moviescatalog.presentation.view.player.view
 
 import android.animation.ValueAnimator
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
@@ -12,7 +13,6 @@ import android.view.MotionEvent
 import android.view.View
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.toRectF
-import androidx.core.view.isVisible
 import com.example.moviescatalog.presentation.extension.dpToPx
 import com.example.ui.R
 import kotlin.math.min
@@ -41,12 +41,11 @@ class TimeBarView @JvmOverloads constructor(
             if (value <= 0)
                 return
 
-            isVisible = true
             field = value
             invalidate()
         }
 
-    val totalTime get() = maxTime - minTime
+    private val totalTime get() = maxTime - minTime
 
     var currentTime: Long = 0
         set(value) {
@@ -60,7 +59,7 @@ class TimeBarView @JvmOverloads constructor(
             invalidate()
         }
 
-    var scrubTime: Long? = null
+    private var scrubTime: Long? = null
         set(value) {
             field = value
             invalidate()
@@ -69,9 +68,10 @@ class TimeBarView @JvmOverloads constructor(
     var scrubberCenter = 0
         private set
 
-    val isScrubbing get() = scrubTime != null
+    private val isScrubbing get() = scrubTime != null
 
     private var barHeight: Int = context.dpToPx(4)
+
     private var scrubberSize: Int = context.dpToPx(24)
         set(value) {
             field = value
@@ -87,11 +87,9 @@ class TimeBarView @JvmOverloads constructor(
     private val scrubberActiveSize: Int
         get() = scrubberDynamicSize ?: scrubberSize
 
-    private var miniScrubberSize: Int = context.dpToPx(12)
-
     private var mainBarRect = Rect()
 
-    private var seekRect = Rect()
+//    private var seekRect = Rect()
 
     private var scrubberDrawable =
         ResourcesCompat.getDrawable(
@@ -100,11 +98,9 @@ class TimeBarView @JvmOverloads constructor(
             context.theme
         )
 
-    private var scrubCancellable = false
-
     private fun timeAtSeekPosition(position: Float): Long {
-        val x = position.coerceIn(seekRect.left.toFloat(), seekRect.right.toFloat())
-        val ratio = (x - seekRect.left) / seekRect.width()
+        val x = position.coerceIn(mainBarRect.left.toFloat(), mainBarRect.right.toFloat())
+        val ratio = (x - mainBarRect.left) / mainBarRect.width()
         return minTime + (ratio * totalTime).toLong()
     }
 
@@ -121,8 +117,6 @@ class TimeBarView @JvmOverloads constructor(
         setMeasuredDimension(MeasureSpec.getSize(widthMeasureSpec), height)
     }
 
-    private val barPadding = context.dpToPx(4)
-
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
         val width = right - left
         val height = bottom - top
@@ -130,7 +124,6 @@ class TimeBarView @JvmOverloads constructor(
         val barRight = width - paddingRight - (scrubberSize / 2)
         val barTop = (height - barHeight) / 2
         mainBarRect.set(barLeft, barTop, barRight, barTop + barHeight)
-        seekRect.set(barLeft, 0, barRight, height)
 
         invalidate()
     }
@@ -201,10 +194,10 @@ class TimeBarView @JvmOverloads constructor(
         val scrubberRatio =
             if (totalTime > 0) (scrubberTime - minTime) / totalTime.toFloat() else 0f
 
-        scrubberCenter = (seekRect.left + (seekRect.width() * scrubberRatio)).toInt()
+        scrubberCenter = (mainBarRect.left + (mainBarRect.width() * scrubberRatio)).toInt()
 
         val scrubberLeft = scrubberCenter - scrubberActiveSize / 2
-        val scrubberTop = seekRect.centerY() - scrubberActiveSize / 2
+        val scrubberTop = mainBarRect.centerY() - scrubberActiveSize / 2
 
         scrubberDrawable?.setBounds(
             scrubberLeft,
@@ -222,8 +215,7 @@ class TimeBarView @JvmOverloads constructor(
 
     private var scrubberAnimator: ValueAnimator? = null
 
-    private var scrubbingActive = true
-
+    @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(event: MotionEvent?): Boolean {
         if (!isEnabled || maxTime <= minTime)
             return false
@@ -273,9 +265,9 @@ class TimeBarView @JvmOverloads constructor(
     // region Listener
 
     interface TimeBarViewListener {
-        fun onScrubStart(timeBar: TimeBarView, time: Long) {}
-        fun onScrubMove(timeBar: TimeBarView, time: Long) {}
-        fun onScrubEnd(timeBar: TimeBarView, time: Long) {}
+        fun onScrubStart(timeBar: TimeBarView, time: Long)
+        fun onScrubMove(timeBar: TimeBarView, time: Long)
+        fun onScrubEnd(timeBar: TimeBarView, time: Long)
     }
 
     private val timeBarViewListeners = mutableListOf<TimeBarViewListener>()

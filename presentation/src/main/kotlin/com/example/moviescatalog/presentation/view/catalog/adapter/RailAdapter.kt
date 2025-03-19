@@ -1,4 +1,4 @@
-package com.example.moviescatalog.presentation.view.catalog
+package com.example.moviescatalog.presentation.view.catalog.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.moviescatalog.model.MovieData
+import com.example.moviescatalog.presentation.view.catalog.viewholder.PosterViewHolder
 import com.example.ui.databinding.ItemPosterBinding
 
 class RailAdapter(

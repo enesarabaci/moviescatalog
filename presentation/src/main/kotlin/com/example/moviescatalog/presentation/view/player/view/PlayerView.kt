@@ -1,4 +1,4 @@
-package com.example.moviescatalog.presentation.view.player
+package com.example.moviescatalog.presentation.view.player.view
 
 import android.content.Context
 import android.util.AttributeSet
@@ -17,8 +17,7 @@ import androidx.media3.common.text.CueGroup
 import androidx.media3.common.util.UnstableApi
 import com.example.moviescatalog.presentation.extension.dpToPx
 import com.example.moviescatalog.presentation.extension.fade
-import com.example.moviescatalog.presentation.extension.fadeIn
-import com.example.moviescatalog.presentation.extension.fadeOut
+import com.example.moviescatalog.presentation.view.player.MCPlayer
 import com.example.ui.databinding.ViewPlayerBinding
 
 @OptIn(UnstableApi::class)

@@ -2,7 +2,6 @@ package com.example.moviescatalog.presentation.view.player
 
 import android.content.Context
 import android.view.SurfaceView
-import android.view.TextureView
 import androidx.annotation.OptIn
 import androidx.media3.common.AudioAttributes
 import androidx.media3.common.C
@@ -13,7 +12,6 @@ import androidx.media3.common.Player.STATE_BUFFERING
 import androidx.media3.common.Player.STATE_ENDED
 import androidx.media3.common.Player.STATE_IDLE
 import androidx.media3.common.Player.STATE_READY
-import androidx.media3.common.Tracks
 import androidx.media3.common.VideoSize
 import androidx.media3.common.text.CueGroup
 import androidx.media3.common.util.UnstableApi
@@ -27,6 +25,8 @@ import androidx.media3.exoplayer.RenderersFactory
 import androidx.media3.exoplayer.drm.DefaultDrmSessionManagerProvider
 import androidx.media3.exoplayer.source.DefaultMediaSourceFactory
 import androidx.media3.ui.SubtitleView
+import com.example.moviescatalog.presentation.view.player.common.Timer
+import com.example.moviescatalog.presentation.view.player.model.VideoData
 
 @OptIn(UnstableApi::class)
 internal class MCPlayer(val context: Context) {

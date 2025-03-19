@@ -1,4 +1,4 @@
-package com.example.moviescatalog.presentation.view.player
+package com.example.moviescatalog.presentation.view.player.common
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

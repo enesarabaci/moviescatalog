@@ -1,4 +1,4 @@
-package com.example.moviescatalog.presentation.view.player
+package com.example.moviescatalog.presentation.view.player.view
 
 import android.annotation.SuppressLint
 import android.content.pm.ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
@@ -24,6 +24,8 @@ import com.example.moviescatalog.model.DataState
 import com.example.moviescatalog.model.MovieData
 import com.example.moviescatalog.presentation.extension.collectWhenStarted
 import com.example.moviescatalog.presentation.extension.getMessage
+import com.example.moviescatalog.presentation.view.player.MCPlayer
+import com.example.moviescatalog.presentation.view.player.model.VideoData
 import com.example.moviescatalog.presentation.viewmodel.PlayerViewModel
 import com.example.ui.databinding.ActivityPlayerBinding
 import dagger.hilt.android.AndroidEntryPoint

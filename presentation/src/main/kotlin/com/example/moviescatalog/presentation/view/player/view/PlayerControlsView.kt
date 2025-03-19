@@ -1,4 +1,4 @@
-package com.example.moviescatalog.presentation.view.player
+package com.example.moviescatalog.presentation.view.player.view
 
 import android.content.Context
 import android.util.AttributeSet
@@ -9,6 +9,8 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isVisible
 import com.example.moviescatalog.presentation.extension.fadeIn
 import com.example.moviescatalog.presentation.extension.fadeOut
+import com.example.moviescatalog.presentation.view.player.MCPlayer
+import com.example.moviescatalog.presentation.view.player.common.Timer
 import com.example.ui.R
 import com.example.ui.databinding.ViewPlayerControlsBinding
 import java.util.Locale
@@ -18,7 +20,7 @@ internal class PlayerControlsView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
-) : ConstraintLayout(context, attrs, defStyleAttr), TimeBarView.TimeBarViewListener {
+) : ConstraintLayout(context, attrs, defStyleAttr) {
 
     private val binding = ViewPlayerControlsBinding.inflate(
         LayoutInflater.from(context),
@@ -123,32 +125,28 @@ internal class PlayerControlsView @JvmOverloads constructor(
         playerControlsViewListener = listener
     }
 
-    override fun onScrubStart(timeBar: TimeBarView, time: Long) {
-        super.onScrubStart(timeBar, time)
+    private val timeBarViewListener = object : TimeBarView.TimeBarViewListener {
+        override fun onScrubStart(timeBar: TimeBarView, time: Long) {
+            hideTimer.stop()
+        }
 
-        hideTimer.stop()
-    }
+        override fun onScrubMove(timeBar: TimeBarView, time: Long) {
+            val hintView = binding.scrubHintTimeTextView
 
-    override fun onScrubMove(timeBar: TimeBarView, time: Long) {
-        super.onScrubMove(timeBar, time)
+            hintView.text = formatTime(time)
+            hintView.isVisible = true
 
-        val hintView = binding.scrubHintTimeTextView
+            val translationX = timeBar.x + timeBar.scrubberCenter - (hintView.width / 2)
+            hintView.translationX = translationX.coerceIn(0f, (right - hintView.width).toFloat())
+        }
 
-        hintView.text = formatTime(time)
-        hintView.isVisible = true
+        override fun onScrubEnd(timeBar: TimeBarView, time: Long) {
+            binding.scrubHintTimeTextView.isVisible = false
 
-        val translationX = timeBar.x + timeBar.scrubberCenter - (hintView.width / 2)
-        hintView.translationX = translationX.coerceIn(0f, (right - hintView.width).toFloat())
-    }
+            playerControlsViewListener?.onScrubEnd(time)
 
-    override fun onScrubEnd(timeBar: TimeBarView, time: Long) {
-        super.onScrubEnd(timeBar, time)
-
-        binding.scrubHintTimeTextView.isVisible = false
-
-        playerControlsViewListener?.onScrubEnd(time)
-
-        hideTimer.start()
+            hideTimer.start()
+        }
     }
 
     // endregion
@@ -160,7 +158,7 @@ internal class PlayerControlsView @JvmOverloads constructor(
 
         hideTimer.start()
 
-        binding.timeBarView.addListener(this)
+        binding.timeBarView.addListener(timeBarViewListener)
 
         binding.playPauseButton.setOnClickListener {
             hideTimer.reset()
