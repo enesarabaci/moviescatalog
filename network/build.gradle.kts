@@ -1,3 +1,6 @@
+import com.android.build.api.dsl.LibraryBuildType
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
@@ -16,7 +19,22 @@ android {
         consumerProguardFiles("consumer-rules.pro")
     }
 
+    val keystorePropertiesFile = rootProject.file("local.properties")
+    val keystoreProperties = Properties()
+
+    if (keystorePropertiesFile.exists()) {
+        keystoreProperties.load(keystorePropertiesFile.inputStream())
+    }
+
+    fun LibraryBuildType.setApiKey() {
+        buildConfigField("String", "API_KEY", "\"${keystoreProperties["API_KEY"]}\"")
+    }
+
     buildTypes {
+        forEach { libraryBuildType ->
+            libraryBuildType.setApiKey()
+        }
+
         release {
             isMinifyEnabled = false
             proguardFiles(
@@ -31,6 +49,9 @@ android {
     }
     kotlinOptions {
         jvmTarget = "11"
+    }
+    buildFeatures {
+        buildConfig = true
     }
 }
 

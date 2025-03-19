@@ -115,6 +115,7 @@ fun View.enableCustomTouchEffect() {
 
 fun View.applyTopInset() {
     setOnApplyWindowInsetsListener { view, insets ->
+        @Suppress("DEPRECATION")
         view.setPadding(0, insets.systemWindowInsetTop, 0, 0)
         insets
     }
@@ -122,6 +123,7 @@ fun View.applyTopInset() {
 
 fun View.applyBottomInset() {
     setOnApplyWindowInsetsListener { view, insets ->
+        @Suppress("DEPRECATION")
         view.setPadding(0, 0, 0, insets.systemWindowInsetBottom)
         insets
     }
