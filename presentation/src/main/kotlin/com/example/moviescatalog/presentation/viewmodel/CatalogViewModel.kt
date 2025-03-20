@@ -4,15 +4,18 @@ import android.os.Parcelable
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
 import com.example.moviescatalog.domain.usecase.GetMoviesUseCase
 import com.example.moviescatalog.model.CatalogState
+import com.example.moviescatalog.model.ErrorType
 import com.example.moviescatalog.model.MovieCatalog
-import com.example.moviescatalog.model.MovieListData
+import com.example.moviescatalog.model.MovieData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -24,18 +27,21 @@ internal class CatalogViewModel @Inject constructor(
 
     private val movieCatalog = MovieCatalog.entries
 
-    private val _catalogStateFlow = MutableStateFlow<List<CatalogState<MovieListData>>>(
+    private val _catalogStateFlow = MutableStateFlow<List<CatalogState<PagingData<MovieData>>>>(
         movieCatalog.map { movieCatalog ->
             movieCatalog.idle()
         }
     )
 
-    val catalogStateFlow: StateFlow<List<CatalogState<MovieListData>>>
+    val catalogStateFlow: StateFlow<List<CatalogState<PagingData<MovieData>>>>
         get() = _catalogStateFlow
 
     private val flows by lazy {
         movieCatalog.map { movieCatalog ->
-            getMoviesUseCase(movieCatalog)
+            getMoviesUseCase(
+                movieCatalog = movieCatalog,
+                cachedInScope = viewModelScope
+            )
         }
     }
 
@@ -61,6 +67,18 @@ internal class CatalogViewModel @Inject constructor(
 
     fun getInnerRecyclerViewSavedStates(): Map<Int, Parcelable?> {
         return savedStateHandle[KEY_INNER_RECYCLER_VIEW_SAVED_STATES] ?: mapOf()
+    }
+
+    fun showNetworkErrorForCatalog(catalog: MovieCatalog) {
+        _catalogStateFlow.update { list ->
+            list.map { catalogState ->
+                if (catalogState.catalog == catalog) {
+                    catalog.error(ErrorType.NETWORK)
+                } else {
+                    catalogState
+                }
+            }
+        }
     }
 
     companion object {

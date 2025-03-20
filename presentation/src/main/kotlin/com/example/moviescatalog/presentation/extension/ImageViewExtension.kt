@@ -13,6 +13,7 @@ fun ImageView.loadImage(
 ) {
     val requestBuilder = Glide.with(this)
         .load(url)
+        .placeholder(R.drawable.bg_image_placeholder)
         .error(R.drawable.bg_image_error)
 
     cornerRadius?.let { radius ->

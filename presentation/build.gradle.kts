@@ -64,4 +64,6 @@ dependencies {
     implementation(libs.androidx.media3.ui)
     implementation(libs.androidx.media3.hls)
     implementation(libs.androidx.media3.dash)
+
+    implementation(libs.androidx.paging)
 }

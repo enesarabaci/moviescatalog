@@ -8,17 +8,24 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.paging.LoadState
+import androidx.paging.PagingData
+import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.moviescatalog.model.CatalogState
-import com.example.moviescatalog.model.MovieListData
+import com.example.moviescatalog.model.MovieCatalog
+import com.example.moviescatalog.model.MovieData
 import com.example.moviescatalog.presentation.extension.collectWhenStarted
 import com.example.moviescatalog.presentation.extension.dpToPx
 import com.example.moviescatalog.presentation.extension.navigatePush
 import com.example.moviescatalog.presentation.view.catalog.adapter.CatalogAdapter
+import com.example.moviescatalog.presentation.view.catalog.viewholder.PosterViewHolder
 import com.example.moviescatalog.presentation.viewmodel.CatalogViewModel
 import com.example.ui.databinding.FragmentCatalogBinding
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 internal class CatalogFragment : Fragment() {
@@ -30,7 +37,9 @@ internal class CatalogFragment : Fragment() {
     private val catalogAdapter by lazy {
         CatalogAdapter(
             onMovieClickListener = ::onMovieClickListener,
-            onScrollStateChangedListener = ::onScrollStateChangedListener
+            onScrollStateChangedListener = ::onScrollStateChangedListener,
+            submitData = ::submitData,
+            handleLoadState = ::handleLoadState
         )
     }
 
@@ -52,7 +61,7 @@ internal class CatalogFragment : Fragment() {
         viewModel.catalogStateFlow.collectWhenStarted(viewLifecycleOwner, ::updateCatalog)
     }
 
-    private fun updateCatalog(catalog: List<CatalogState<MovieListData>>) {
+    private fun updateCatalog(catalog: List<CatalogState<PagingData<MovieData>>>) {
         catalogAdapter.updateList(catalog)
     }
 
@@ -76,6 +85,33 @@ internal class CatalogFragment : Fragment() {
             position = position,
             savedState = savedState
         )
+    }
+
+    private fun submitData(
+        adapter: PagingDataAdapter<MovieData, PosterViewHolder>,
+        data: PagingData<MovieData>
+    ) {
+        lifecycleScope.launch {
+            adapter.submitData(data)
+        }
+    }
+
+    private fun handleLoadState(
+        adapter: PagingDataAdapter<MovieData, PosterViewHolder>,
+        catalog: MovieCatalog
+    ) {
+        adapter.loadStateFlow.collectWhenStarted(viewLifecycleOwner) { loadStates ->
+            if (adapter.itemCount > 0)
+                return@collectWhenStarted
+
+            val loadStateError = loadStates.refresh as? LoadState.Error
+                ?: loadStates.append as? LoadState.Error
+                ?: loadStates.prepend as? LoadState.Error
+
+            loadStateError?.let {
+                viewModel.showNetworkErrorForCatalog(catalog)
+            }
+        }
     }
 
     private val itemDecoration = object : RecyclerView.ItemDecoration() {

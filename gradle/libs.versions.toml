@@ -22,6 +22,7 @@ chucker = "4.0.0"
 jetbrainsKotlinJvm = "2.1.10"
 glide = "4.16.0"
 media3 = "1.5.1"
+paging = "3.3.6"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -47,6 +48,7 @@ androidx-media3 = { module = "androidx.media3:media3-exoplayer", version.ref = "
 androidx-media3-ui = { module = "androidx.media3:media3-ui", version.ref = "media3" }
 androidx-media3-hls = { module = "androidx.media3:media3-exoplayer-hls", version.ref = "media3" }
 androidx-media3-dash = { module = "androidx.media3:media3-exoplayer-dash", version.ref = "media3" }
+androidx-paging = { module = "androidx.paging:paging-runtime-ktx", version.ref = "paging" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

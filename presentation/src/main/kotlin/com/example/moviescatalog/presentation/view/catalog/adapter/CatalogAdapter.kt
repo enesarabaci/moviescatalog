@@ -5,31 +5,37 @@ import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.paging.PagingData
+import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.moviescatalog.model.CatalogState
-import com.example.moviescatalog.model.MovieListData
+import com.example.moviescatalog.model.MovieCatalog
+import com.example.moviescatalog.model.MovieData
 import com.example.moviescatalog.presentation.extension.dpToPx
+import com.example.moviescatalog.presentation.view.catalog.viewholder.PosterViewHolder
 import com.example.moviescatalog.presentation.view.catalog.viewholder.RailViewHolder
 import com.example.ui.databinding.ItemRailBinding
 
 class CatalogAdapter(
     private val onMovieClickListener: (id: Int) -> Unit,
-    private val onScrollStateChangedListener: ((Int, Parcelable?) -> Unit)
+    private val onScrollStateChangedListener: ((Int, Parcelable?) -> Unit),
+    private val submitData: ((adapter: PagingDataAdapter<MovieData, PosterViewHolder>, data: PagingData<MovieData>) -> Unit),
+    private val handleLoadState: (adapter: PagingDataAdapter<MovieData, PosterViewHolder>, catalog: MovieCatalog) -> Unit
 ) : RecyclerView.Adapter<RailViewHolder>() {
 
-    private val diffUtil = object : DiffUtil.ItemCallback<CatalogState<MovieListData>>() {
+    private val diffUtil = object : DiffUtil.ItemCallback<CatalogState<PagingData<MovieData>>>() {
         override fun areItemsTheSame(
-            oldItem: CatalogState<MovieListData>,
-            newItem: CatalogState<MovieListData>
+            oldItem: CatalogState<PagingData<MovieData>>,
+            newItem: CatalogState<PagingData<MovieData>>
         ): Boolean {
             return oldItem.catalog == newItem.catalog
         }
 
         override fun areContentsTheSame(
-            oldItem: CatalogState<MovieListData>,
-            newItem: CatalogState<MovieListData>
+            oldItem: CatalogState<PagingData<MovieData>>,
+            newItem: CatalogState<PagingData<MovieData>>
         ): Boolean {
             return oldItem == newItem
         }
@@ -37,10 +43,10 @@ class CatalogAdapter(
 
     private val recyclerListDiffer = AsyncListDiffer(this, diffUtil)
 
-    private val currentList: List<CatalogState<MovieListData>>
+    private val currentList: List<CatalogState<PagingData<MovieData>>>
         get() = recyclerListDiffer.currentList
 
-    fun updateList(newList: List<CatalogState<MovieListData>>) {
+    fun updateList(newList: List<CatalogState<PagingData<MovieData>>>) {
         recyclerListDiffer.submitList(newList)
     }
 
@@ -89,7 +95,9 @@ class CatalogAdapter(
             itemRailBinding,
             itemDecoration,
             onMovieClickListener,
-            onScrollStateChangedListener
+            onScrollStateChangedListener,
+            submitData,
+            handleLoadState
         )
     }
 

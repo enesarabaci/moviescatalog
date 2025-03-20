@@ -2,10 +2,13 @@ package com.example.moviescatalog.presentation.view.catalog.viewholder
 
 import android.os.Parcelable
 import androidx.core.view.isVisible
+import androidx.paging.PagingData
+import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ItemDecoration
 import com.example.moviescatalog.model.CatalogState
-import com.example.moviescatalog.model.MovieListData
+import com.example.moviescatalog.model.MovieCatalog
+import com.example.moviescatalog.model.MovieData
 import com.example.moviescatalog.presentation.extension.getMessage
 import com.example.moviescatalog.presentation.extension.getTitle
 import com.example.moviescatalog.presentation.view.catalog.adapter.RailAdapter
@@ -15,7 +18,9 @@ class RailViewHolder(
     private val binding: ItemRailBinding,
     itemDecoration: ItemDecoration,
     private val onMovieClickListener: (id: Int) -> Unit,
-    private val onScrollStateChangedListener: ((Int, Parcelable?) -> Unit)
+    private val onScrollStateChangedListener: ((Int, Parcelable?) -> Unit),
+    private val submitData: ((adapter: PagingDataAdapter<MovieData, PosterViewHolder>, data: PagingData<MovieData>) -> Unit),
+    private val handleLoadState: (adapter: PagingDataAdapter<MovieData, PosterViewHolder>, catalog: MovieCatalog) -> Unit
 ) : RecyclerView.ViewHolder(binding.root) {
 
     private val railAdapter by lazy {
@@ -23,7 +28,7 @@ class RailViewHolder(
     }
 
     fun bind(
-        catalogState: CatalogState<MovieListData>,
+        catalogState: CatalogState<PagingData<MovieData>>,
         savedState: Parcelable?
     ) {
         val context = binding.root.context
@@ -44,8 +49,12 @@ class RailViewHolder(
             is CatalogState.Idle -> {}
             is CatalogState.Loading -> {}
             is CatalogState.Success -> {
-                railAdapter.updateList(catalogState.data.movies)
+                submitData(railAdapter, catalogState.data)
             }
+        }
+
+        if (railAdapter.snapshot().items.isEmpty()) {
+            handleLoadState(railAdapter, catalogState.catalog)
         }
     }
 

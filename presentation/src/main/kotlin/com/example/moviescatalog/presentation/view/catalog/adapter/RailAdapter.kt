@@ -2,40 +2,32 @@ package com.example.moviescatalog.presentation.view.catalog.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.recyclerview.widget.AsyncListDiffer
+import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.RecyclerView
 import com.example.moviescatalog.model.MovieData
 import com.example.moviescatalog.presentation.view.catalog.viewholder.PosterViewHolder
 import com.example.ui.databinding.ItemPosterBinding
 
 class RailAdapter(
     private val onMovieClickListener: (id: Int) -> Unit
-) : RecyclerView.Adapter<PosterViewHolder>() {
+) : PagingDataAdapter<MovieData, PosterViewHolder>(diffUtil) {
 
-    private val diffUtil = object : DiffUtil.ItemCallback<MovieData>() {
-        override fun areItemsTheSame(
-            oldItem: MovieData,
-            newItem: MovieData
-        ): Boolean {
-            return oldItem.id == newItem.id
+    companion object {
+        private val diffUtil = object : DiffUtil.ItemCallback<MovieData>() {
+            override fun areItemsTheSame(
+                oldItem: MovieData,
+                newItem: MovieData
+            ): Boolean {
+                return oldItem.id == newItem.id
+            }
+
+            override fun areContentsTheSame(
+                oldItem: MovieData,
+                newItem: MovieData
+            ): Boolean {
+                return oldItem == newItem
+            }
         }
-
-        override fun areContentsTheSame(
-            oldItem: MovieData,
-            newItem: MovieData
-        ): Boolean {
-            return oldItem == newItem
-        }
-    }
-
-    private val recyclerListDiffer = AsyncListDiffer(this, diffUtil)
-
-    private val currentList: List<MovieData>
-        get() = recyclerListDiffer.currentList
-
-    fun updateList(newList: List<MovieData>) {
-        recyclerListDiffer.submitList(newList)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PosterViewHolder {
@@ -48,12 +40,9 @@ class RailAdapter(
         return PosterViewHolder(itemPosterBinding, onMovieClickListener)
     }
 
-    override fun getItemCount(): Int {
-        return currentList.size
-    }
-
     override fun onBindViewHolder(holder: PosterViewHolder, position: Int) {
-        val movieData = currentList[position]
-        holder.bind(movieData)
+        getItem(position)?.let { movieData ->
+            holder.bind(movieData)
+        }
     }
 }
