@@ -15,7 +15,9 @@ import com.example.moviescatalog.model.MovieData
 import com.example.moviescatalog.presentation.extension.applyBottomInset
 import com.example.moviescatalog.presentation.extension.applyTopInset
 import com.example.moviescatalog.presentation.extension.collectWhenStarted
+import com.example.moviescatalog.presentation.extension.fadeOut
 import com.example.moviescatalog.presentation.extension.getMessage
+import com.example.moviescatalog.presentation.extension.isTablet
 import com.example.moviescatalog.presentation.extension.loadImage
 import com.example.moviescatalog.presentation.view.player.view.PlayerActivity
 import com.example.moviescatalog.presentation.view.player.view.PlayerActivity.Companion.KEY_CONTENT_ID
@@ -47,15 +49,7 @@ class DetailFragment : Fragment() {
 
         viewModel.movieDetailsStateFlow.collectWhenStarted(viewLifecycleOwner, ::updateUI)
 
-        binding.watchButton.setOnClickListener {
-            val playerIntent = Intent(requireContext(), PlayerActivity::class.java)
-            playerIntent.putExtra(KEY_CONTENT_ID, args.id)
-            startActivity(playerIntent)
-        }
-
-        binding.closeButton.setOnClickListener {
-            findNavController().popBackStack()
-        }
+        setClickListeners()
 
         binding.topBar.applyTopInset()
         binding.bottomBar.applyBottomInset()
@@ -88,6 +82,26 @@ class DetailFragment : Fragment() {
             }
             DataState.Loading -> {}
             DataState.Idle -> {}
+        }
+    }
+
+    private fun setClickListeners() {
+        binding.watchButton.setOnClickListener {
+            val playerIntent = Intent(requireContext(), PlayerActivity::class.java)
+            playerIntent.putExtra(KEY_CONTENT_ID, args.id)
+            startActivity(playerIntent)
+        }
+
+        binding.closeButton.setOnClickListener {
+            if (requireContext().isTablet()) {
+                binding.root.fadeOut(
+                    completion = {
+                        parentFragmentManager.beginTransaction().remove(this).commit()
+                    }
+                )
+            } else {
+                findNavController().popBackStack()
+            }
         }
     }
 }

@@ -19,10 +19,14 @@ import com.example.moviescatalog.model.MovieCatalog
 import com.example.moviescatalog.model.MovieData
 import com.example.moviescatalog.presentation.extension.collectWhenStarted
 import com.example.moviescatalog.presentation.extension.dpToPx
+import com.example.moviescatalog.presentation.extension.fadeIn
+import com.example.moviescatalog.presentation.extension.isTablet
 import com.example.moviescatalog.presentation.extension.navigatePush
 import com.example.moviescatalog.presentation.view.catalog.adapter.CatalogAdapter
 import com.example.moviescatalog.presentation.view.catalog.viewholder.PosterViewHolder
+import com.example.moviescatalog.presentation.view.detail.DetailFragment
 import com.example.moviescatalog.presentation.viewmodel.CatalogViewModel
+import com.example.ui.R
 import com.example.ui.databinding.FragmentCatalogBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -72,9 +76,22 @@ internal class CatalogFragment : Fragment() {
     }
 
     private fun onMovieClickListener(id: Int) {
-        findNavController().navigatePush(
-            CatalogFragmentDirections.actionCatalogFragmentToDetailFragment(id)
-        )
+        if (requireContext().isTablet()) {
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.detailFragmentContainer, DetailFragment().also {
+                    it.arguments = Bundle().apply {
+                        putInt("id", id)
+                    }
+                })
+                .commit()
+
+            binding?.detailFragmentContainer?.alpha = 0f
+            binding?.detailFragmentContainer?.fadeIn()
+        } else {
+            findNavController().navigatePush(
+                CatalogFragmentDirections.actionCatalogFragmentToDetailFragment(id)
+            )
+        }
     }
 
     private fun setupRecyclerView() {
