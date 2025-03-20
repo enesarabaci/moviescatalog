@@ -15,12 +15,20 @@
 ##### Flow </br>
 ##### Retrofit </br>
 
+</br>
 
 ## Setup
 
 In order to run the project, **you have to** add your TheMovieDB API key into the local.properties file as shown below.
 
 <img src="https://github.com/user-attachments/assets/b00e23c4-9861-4aed-a93c-dcab4c583033" width="750">
+
+</br>
+</br>
+
+Also if you allow apps notifications, you will be able to see the network traffic through notifications.
+
+</br>
 
 ## Images
 
