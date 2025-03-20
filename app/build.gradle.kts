@@ -57,4 +57,6 @@ dependencies {
     implementation(libs.hilt.android)
     ksp(libs.androidx.hilt.compiler)
     ksp(libs.hilt.android.compiler)
+
+//    debugImplementation(libs.leakcanary.android)
 }

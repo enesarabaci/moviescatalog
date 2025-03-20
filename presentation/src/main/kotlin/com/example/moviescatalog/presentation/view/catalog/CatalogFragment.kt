@@ -30,7 +30,7 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 internal class CatalogFragment : Fragment() {
 
-    private lateinit var binding: FragmentCatalogBinding
+    private var binding: FragmentCatalogBinding? = null
 
     private val viewModel: CatalogViewModel by viewModels()
 
@@ -48,9 +48,10 @@ internal class CatalogFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentCatalogBinding.inflate(inflater, container, false)
-
-        return binding.root
+        FragmentCatalogBinding.inflate(inflater, container, false).also {
+            binding = it
+            return it.root
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -76,8 +77,8 @@ internal class CatalogFragment : Fragment() {
             viewModel.getInnerRecyclerViewSavedStates()
         )
 
-        binding.catalogRecyclerView.addItemDecoration(itemDecoration)
-        binding.catalogRecyclerView.adapter = catalogAdapter
+        binding?.catalogRecyclerView?.addItemDecoration(itemDecoration)
+        binding?.catalogRecyclerView?.adapter = catalogAdapter
     }
 
     private fun onScrollStateChangedListener(position: Int, savedState: Parcelable?) {
@@ -134,5 +135,12 @@ internal class CatalogFragment : Fragment() {
 
             outRect.top = top
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+
+        binding?.catalogRecyclerView?.adapter = null
+        binding = null
     }
 }
