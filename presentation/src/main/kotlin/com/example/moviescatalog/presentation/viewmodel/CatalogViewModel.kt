@@ -36,16 +36,18 @@ internal class CatalogViewModel @Inject constructor(
     val catalogStateFlow: StateFlow<List<CatalogState<PagingData<MovieData>>>>
         get() = _catalogStateFlow
 
-    private val flows by lazy {
-        movieCatalog.map { movieCatalog ->
+    init {
+        fetchCatalogs()
+    }
+
+    fun fetchCatalogs() {
+        val flows = movieCatalog.map { movieCatalog ->
             getMoviesUseCase(
                 movieCatalog = movieCatalog,
                 cachedInScope = viewModelScope
             )
         }
-    }
 
-    init {
         viewModelScope.launch {
             combine(*flows.toTypedArray()) { resultArray ->
                 resultArray.toList()

@@ -66,4 +66,6 @@ dependencies {
     implementation(libs.androidx.media3.dash)
 
     implementation(libs.androidx.paging)
+
+    implementation(libs.androidx.swiperefreshlayout)
 }

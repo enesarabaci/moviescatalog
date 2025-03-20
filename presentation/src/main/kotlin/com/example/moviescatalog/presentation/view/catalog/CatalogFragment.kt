@@ -60,9 +60,14 @@ internal class CatalogFragment : Fragment() {
         setupRecyclerView()
 
         viewModel.catalogStateFlow.collectWhenStarted(viewLifecycleOwner, ::updateCatalog)
+
+        binding?.swipeRefreshLayout?.setOnRefreshListener {
+            viewModel.fetchCatalogs()
+        }
     }
 
     private fun updateCatalog(catalog: List<CatalogState<PagingData<MovieData>>>) {
+        binding?.swipeRefreshLayout?.isRefreshing = false
         catalogAdapter.updateList(catalog)
     }
 
